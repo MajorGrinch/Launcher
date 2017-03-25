@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!--<SearchView-->
+            <!--android:id="@+id/search"-->
+            <!--android:layout_width="270dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:iconifiedByDefault="false"-->
+            <!--android:paddingLeft="20dp"-->
+            <!--android:queryHint="@string/search_contact_hint">-->
+        <!--</SearchView>-->
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:paddingLeft="50dp"
+            android:gravity="center_vertical"
+            android:text="@string/message"
+            android:textStyle="bold"
+            android:textSize="20dp"/>
+
+        <ImageButton
+            android:id="@+id/btn_new_msg"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:paddingLeft="10dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/edit"
+            android:scaleType="fitCenter"/>
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/sms_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:cacheColorHint="#00000000"
+        android:choiceMode="singleChoice"
+        android:fastScrollEnabled="true"
+        android:soundEffectsEnabled="true" />
+
+</LinearLayout>

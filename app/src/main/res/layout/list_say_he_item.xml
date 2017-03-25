@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout_bj"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <tech.doujiang.launcher.view.CustomTextView
+            android:id="@+id/messagedetail_row_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="top|left"
+            android:padding="5dip"
+            android:textColor="@color/greenyellow" />
+
+        <TextView
+            android:id="@+id/messagedetail_row_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#65879e" />
+    </LinearLayout>
+
+</RelativeLayout>
