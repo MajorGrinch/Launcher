@@ -3,19 +3,13 @@ package tech.doujiang.launcher.util;
 import java.io.*;
 
 import android.annotation.SuppressLint;
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Environment;
 
 import android.util.Log;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.Reader;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -38,7 +32,6 @@ public class Module implements IXposedHookLoadPackage {
     public String targetPackage = "";
     public String packageName = null;
     public String extDir = Environment.getExternalStorageDirectory().getPath();
-    public Des mine_encry = new Des("TPSECRET");
     public String cache_name = "cache.txt";
     public File cache;
     private String content;
@@ -48,7 +41,7 @@ public class Module implements IXposedHookLoadPackage {
 
     @SuppressLint("NewApi")
     @Override
-    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
+    public void handleLoadPackage(final XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
 
         packageName = lpparam.packageName;
 //        XposedBridge.log("Loaded app:" + packageName);
@@ -63,19 +56,19 @@ public class Module implements IXposedHookLoadPackage {
                     InputStreamReader reader = (InputStreamReader) param.args[0];
                     content = "";
                     int i;
-//                    XposedBridge.log("HOOK SUCCESSFULLY!");
-                    Log.v("extdir", extDir);
+                    XposedBridge.log("HOOK SUCCESSFULLY!");
+
                     while ((i = reader.read()) != -1) {
                         char c = (char) i;
                         content = content + c;
                     } //all the inputstream has been read
-                    Log.v("Hook Successfully!!!", content.substring(0, 10));
+
                     if (content.substring(0, 10).compareTo(sign) == 0)  //belong to Stark Tech
                     {
                         String cacDir = new String(Environment.getDataDirectory().toString());
                         cacDir += "/data/com.ostrichmyself.txtReader/cache";
                         int index_surfix = content.indexOf(surfix); //find the ".txt"
-                        Log.v("index surfix", "surpos" + index_surfix);
+                        Log.d("index surfix", "surpos" + index_surfix);
                         int x = index_surfix;   // index of the .txt, specifically is the '.'
                         while (x != -1) {
                             if (content.charAt(x) == '/') {
@@ -84,45 +77,45 @@ public class Module implements IXposedHookLoadPackage {
                             }
                             x--;
                         }
-
+                        Myaes.init("123456789abcdefg");
                         String filename = content.substring(namestart + 1, index_surfix + 4);
                         int pathstart = content.indexOf('/');
-                        Log.v("pathstart", String.valueOf(pathstart));
+                        Log.d("pathstart", String.valueOf(pathstart));
                         String rela_path = content.substring(pathstart, index_surfix + 4);
-                        Log.v("rela_path", rela_path);
-                        Log.v("file name", filename);
+                        Log.d("rela_path", rela_path);
+                        Log.d("file name", filename);
                         String filepath = extDir + rela_path;
-                        Log.v("file path", filepath);
-                        Log.v("cache dir", cacDir);
+                        Log.d("file path", filepath);
+                        Log.d("cache dir", cacDir);
                         cache = new File(cacDir, filename);
-                        Log.v("Exist cache?", String.valueOf(cache.exists()));
+                        Log.d("Exist cache?", String.valueOf(cache.exists()));
                         if (!cache.exists()) {
                             try {
                                 cache.createNewFile();
                             } catch (IOException ex) {
-                                Log.v("Crate failed", ex.toString());
+                                Log.d("Crate failed", ex.toString());
                             }
                             try {
-                                Log.v("cache path", cache.getAbsolutePath());
-                                Log.v("file path", filepath);
-                                mine_encry.decrypt(index_surfix + 6, filepath, cache.getAbsolutePath());
+                                Log.d("cache path", cache.getAbsolutePath());
+                                Log.d("file path", filepath);
+                                Myaes.decryptFile(index_surfix + 6, filepath, cache.getAbsolutePath());
                             } catch (IOException ex) {
-                                Log.v("Something wrong", ex.toString());
+                                Log.d("Something wrong", ex.toString());
 
                             }
                         }
                         param.args[0] = new FileReader(cache);
                     } else   // private text
                     {
-                        Log.v("SD_PATH", extDir);
+                        Log.d("SD_PATH", extDir);
                         cache = new File(extDir, cache_name);
                         if (!cache.exists()) {
                             try {
                                 cache.createNewFile();
-                                Log.v("Outcome", String.valueOf(cache.exists()));
+                                Log.d("Outcome", String.valueOf(cache.exists()));
                             } catch (IOException e) {
 
-                                Log.v("Exception", e.toString());
+                                Log.d("Exception", e.toString());
                             }
                         }
                         try {
@@ -130,14 +123,13 @@ public class Module implements IXposedHookLoadPackage {
                             w.write(content);
                             w.close();
                         } catch (IOException ex) {
-                            Log.v("Exception", ex.toString());
+                            Log.d("Exception", ex.toString());
                         }
                         param.args[0] = new FileReader(cache);
                         //cache.deleteOnExit();
                     }
                 }
             }
-
 
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -146,9 +138,6 @@ public class Module implements IXposedHookLoadPackage {
                 }
 
             }
-
         });
     }
-
-
 }

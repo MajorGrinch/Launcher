@@ -35,7 +35,8 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="IvtLyoPAFqGcFA9flvLGj1Z1QKxfAeoe" /> //key:开发者申请的key
+            android:value="IvtLyoPAFqGcFA9flvLGj1Z1QKxfAeoe" />
+        //key:开发者申请的key
         <meta-data
             android:name="xposedmodule"
             android:value="true" />
@@ -55,13 +56,15 @@
             android:exported="false" />
 
         <activity android:name=".activity.LauncherActivity">
-            <!--<intent-filter>-->
 
-                <!-- <action android:name="android.intent.action.MAIN" /> -->
-                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-                <!--<category android:name="android.intent.category.HOME" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+
+
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- <category android:name="android.intent.category.HOME" /> -->
+            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity android:name=".activity.MessageBoxListActivity" />
         <activity android:name=".activity.SMSListActivity" />
@@ -117,6 +120,7 @@
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -154,18 +158,25 @@
         </activity>
 
         <!-- Service that delivers messages from the phone "quick response" -->
-        <service android:name=".service.HeadlessSmsService"
-            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE"
-            android:exported="true" >
+        <service
+            android:name=".service.HeadlessSmsService"
+            android:exported="true"
+            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
             <intent-filter>
                 <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="sms" />
                 <data android:scheme="smsto" />
                 <data android:scheme="mms" />
                 <data android:scheme="mmsto" />
             </intent-filter>
         </service>
+        <service
+            android:name=".service.FileClickService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
