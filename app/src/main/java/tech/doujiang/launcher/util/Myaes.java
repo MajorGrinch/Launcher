@@ -88,8 +88,4 @@ public class Myaes {
         fos.close();
         fis.close();
     }
-
-    public static void main(String[] args) throws Exception { //使用样例
-
-    }
 }

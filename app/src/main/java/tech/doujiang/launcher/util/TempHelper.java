@@ -5,5 +5,6 @@ package tech.doujiang.launcher.util;
  */
 
 public class TempHelper {
-    public static String server_url = "http://192.168.1.106:8080/MobileSafeServer";
+    //public static String server_url = "http://192.168.1.106:8080/MobileSafeServer";
+    public static String server_url = "http://121.42.213.41:8080/MobileSafeServer";
 }
