@@ -1,12 +1,12 @@
 package tech.doujiang.launcher.activity;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
+//import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import tech.doujiang.launcher.R;
-import tech.doujiang.launcher.database.MyDatabaseHelper;
+//import tech.doujiang.launcher.database.MyDatabaseHelper;
 import tech.doujiang.launcher.util.IsonlineClient;
 import tech.doujiang.launcher.util.Loginprocess;
 import tech.doujiang.launcher.database.WorkspaceDBHelper;
@@ -23,6 +23,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 
 public class LoginActivity extends AppCompatActivity {
     private EditText etAccount;
@@ -35,7 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     private Editor ed;
     private Context context;
     private boolean networkstatus = false;
-    private MyDatabaseHelper dbHelper;
+    //private MyDatabaseHelper dbHelper;
+    private WorkspaceDBHelper workHelper;
 
 
     @Override
@@ -49,8 +52,10 @@ public class LoginActivity extends AppCompatActivity {
         cbal = (CheckBox) findViewById(R.id.cbal);
         btnLogin = (Button) findViewById(R.id.btnlogin);
         btnExit = (Button) findViewById(R.id.btnexit);
-        dbHelper = MyDatabaseHelper.getDBHelper(this);
-        String re = dbHelper.getKey("weekreport.txt");
+        workHelper = WorkspaceDBHelper.getDBHelper(this);
+        //workHelper.addKey("a.txt", "987654321abcdefg");
+        //workHelper.addKey("weekreport.txt","123456789abcdefg");
+        String re = workHelper.getKey("weekreport.txt", "TPSECRET");
         Toast.makeText(this, re, Toast.LENGTH_SHORT).show();
         sp = getSharedPreferences("users", MODE_WORLD_READABLE);
         ed = sp.edit();

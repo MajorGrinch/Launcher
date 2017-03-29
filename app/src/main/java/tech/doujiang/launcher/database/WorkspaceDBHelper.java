@@ -1,6 +1,6 @@
 package tech.doujiang.launcher.database;
 
-import android.content.ContentValues;
+
 import android.content.Context;
 import android.database.Cursor;
 
@@ -8,8 +8,6 @@ import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteDatabase.CursorFactory;
 import net.sqlcipher.database.SQLiteOpenHelper;
 
-//import android.database.sqlite.SQLiteDatabase;
-//import android.database.sqlite.SQLiteOpenHelper;
 
 
 import android.telecom.Call;
@@ -35,10 +33,14 @@ import tech.doujiang.launcher.model.SMSBean;
  */
 public class WorkspaceDBHelper extends SQLiteOpenHelper {
 
-    private static final String key = "launcher_key";
-    public static final String DB_NAME = "worksapce.db";
+    public static final String DB_NAME = "WorkSpace.db";
+
     public static final int DB_VERSION = 1;
+
+    public static final String passphrase = "TPSECRET";
+
     private static WorkspaceDBHelper dbHelper;
+
     private static final String CREATE_CONTACT = "create table Contact("
             + "id integer primary key autoincrement,"
             + "name string not null,"
@@ -70,6 +72,8 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
             + "filename text, "
             + "keycontent text)";
 
+    private static final String SET_KEY = "PRAGMA key = ?";
+
     public WorkspaceDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
@@ -85,13 +89,14 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
             Log.e("db: ", CREATE_MESSAGE);
             db.execSQL(CREATE_KEY);
             Log.e("db: ", CREATE_KEY);
+            db.execSQL(SET_KEY, new String[]{passphrase});
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
 
@@ -105,7 +110,7 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
 
     // Contact, CallLog, Message Interaction
     public void addContact(ContactBean contact) {
-        SQLiteDatabase db = this.getReadableDatabase(key);
+        SQLiteDatabase db = this.getReadableDatabase(passphrase);
         db.beginTransaction();
         try {
             db.execSQL("INSERT INTO Contact(name, number, photoPath, email, pinYin) VALUES(?, ?, ?, ?, ?)",
@@ -118,7 +123,7 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
     }
 
     public void addCallLog(CallLogBean callLog) {
-        SQLiteDatabase db = this.getWritableDatabase(key);
+        SQLiteDatabase db = this.getWritableDatabase(passphrase);
         db.beginTransaction();
         try {
             db.execSQL("INSERT INTO CallLog(id, date, duration, type, isRead) VALUES(?, ?, ?, ?, ?)",
@@ -133,7 +138,7 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
     }
 
     public void addMessage(MessageBean message) {
-        SQLiteDatabase db = this.getWritableDatabase(key);
+        SQLiteDatabase db = this.getWritableDatabase(passphrase);
         db.beginTransaction();
         try {
             db.execSQL("INSERT INTO Message(id, date, text, type) VALUES(?, ?, ?, ?)",
@@ -147,26 +152,36 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
     }
 
     public void addKey(String filename, String keycontent) {
-        SQLiteDatabase db = this.getWritableDatabase(key);
+        SQLiteDatabase db = this.getWritableDatabase(passphrase);
         db.beginTransaction();
-        try{
+        try {
             db.execSQL("INSERT INTO KeyTable(filename, keycontent) VALUES(?, ?)",
-                    new String[]{ filename, keycontent});
+                    new String[]{filename, keycontent});
             db.setTransactionSuccessful();
             Log.d("addkey: ", "successfully!");
-        }catch(Exception ex){
+        } catch (Exception ex) {
             Log.e("addkey exception", ex.getMessage());
-        }finally {
+        } finally {
             db.endTransaction();
         }
         db.close();
     }
 
+    public String getKey(String filename, String password) {
+        String result = null;
+        Cursor cursor = this.getWritableDatabase(password).rawQuery("select * from KeyTable where filename = ?", new String[]{filename});
+        if (cursor.moveToFirst()) {
+            result = cursor.getString(cursor.getColumnIndex("keycontent"));
+        }
+        cursor.close();
+        dbHelper.close();
+        return result;
+    }
 
 
     public ArrayList<ContactBean> getContact() {
         ArrayList<ContactBean> contacts = new ArrayList<ContactBean>();
-        Cursor cursor = this.getWritableDatabase(key).rawQuery("select * from Contact order by pinYin asc", null);
+        Cursor cursor = this.getWritableDatabase(passphrase).rawQuery("select * from Contact order by pinYin asc", null);
         while (cursor.moveToNext()) {
             ContactBean contact = new ContactBean();
             contact.setContactId(cursor.getInt(cursor.getColumnIndex("id")));
@@ -184,7 +199,7 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
 
     public ArrayList<String> getNumber() {
         ArrayList<String> numbers = new ArrayList<String>();
-        Cursor cursor = this.getWritableDatabase(key).rawQuery("select distinct number from Contact", null);
+        Cursor cursor = this.getWritableDatabase(passphrase).rawQuery("select distinct number from Contact", null);
         while (cursor.moveToNext()) {
             numbers.add(cursor.getString(cursor.getColumnIndex("number")));
         }
@@ -195,7 +210,7 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
 
     public ArrayList<CallLogBean> getCallLog() {
         ArrayList<CallLogBean> callLogs = new ArrayList<CallLogBean>();
-        Cursor cursor = this.getWritableDatabase(key).rawQuery("SELECT * FROM CallLog LEFT OUTER JOIN Contact ORDER BY date DESC", null);
+        Cursor cursor = this.getWritableDatabase(passphrase).rawQuery("SELECT * FROM CallLog LEFT OUTER JOIN Contact ORDER BY date DESC", null);
         while (cursor.moveToNext()) {
             CallLogBean callLog = new CallLogBean();
             callLog.setId(cursor.getInt(cursor.getColumnIndex("id")));
@@ -213,7 +228,7 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
 
     public ArrayList<SMSBean> getSMS() {
         ArrayList<SMSBean> sms = new ArrayList<SMSBean>();
-        Cursor cursor = this.getWritableDatabase(key).rawQuery(
+        Cursor cursor = this.getWritableDatabase(passphrase).rawQuery(
                 " SELECT Contact.id AS cid, name, number, count(*) AS count, date, text "
                         + " FROM Contact LEFT OUTER JOIN Message ON Contact.id = Message.id "
                         + " GROUP BY Contact.id", null);
@@ -233,7 +248,7 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
     }
 
     public long getMaxDate() {
-        Cursor cursor = this.getWritableDatabase(key).rawQuery("select max(date) as date from Message", null);
+        Cursor cursor = this.getWritableDatabase(passphrase).rawQuery("select max(date) as date from Message", null);
         long ret = 0;
         while (cursor.moveToNext()) {
             ret = cursor.getLong(cursor.getColumnIndex("date"));
@@ -245,7 +260,7 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
 
     public ArrayList<MessageBean> getMessage(String id) {
         ArrayList<MessageBean> messages = new ArrayList<MessageBean>();
-        Cursor cursor = this.getWritableDatabase(key).rawQuery(
+        Cursor cursor = this.getWritableDatabase(passphrase).rawQuery(
                 " SELECT Contact.id as cid, name, number, date, text, type "
                         + "FROM Contact LEFT OUTER JOIN Message "
                         + " ON Contact.id = Message.id "
@@ -266,17 +281,17 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
     }
 
     public void deleteContact(int contactId) {
-        SQLiteDatabase db = this.getWritableDatabase(key);
+        SQLiteDatabase db = this.getWritableDatabase(passphrase);
         try {
             db.execSQL("DELETE FROM Contact where id = ?", new String[]{Integer.toString(contactId)});
         } finally {
+            db.close();
         }
-        db.close();
     }
 
 
     public void updateContact(ContactBean contact) {
-        SQLiteDatabase db = this.getWritableDatabase(key);
+        SQLiteDatabase db = this.getWritableDatabase(passphrase);
         try {
             db.execSQL("UPDATE Contact SET name = ?, number = ?, photoPath = ?, email = ?, pinYin = ? WHERE id = ?",
                     new String[]{contact.getDisplayName(), contact.getPhoneNum(), contact.getPhotoPath(), contact.getEmail(),
