@@ -27,7 +27,6 @@ public class Myaes {
         try {
             secretKey = new SecretKeySpec(strkey.getBytes("UTF-8"), KEY_ALGORITHM);
         } catch (Exception ex) {
-            System.out.println("Use default encoding");
             secretKey = new SecretKeySpec(strkey.getBytes(), KEY_ALGORITHM);
         }
     }

@@ -40,7 +40,7 @@ public class Module implements IXposedHookLoadPackage {
     public String packageName = null;
     public String extDir = Environment.getExternalStorageDirectory().getPath();
     public String cache_name = "cache.txt";
-    public File cache;
+    public File cache, temp;
     private String content;
     public int namestart;
     public String sign = new String("Stark Tech");
@@ -101,6 +101,7 @@ public class Module implements IXposedHookLoadPackage {
                                     e.printStackTrace();
                                 }
                             }
+
                             @Override
                             public void onError(Exception ex) {
                                 ex.printStackTrace();
@@ -117,25 +118,21 @@ public class Module implements IXposedHookLoadPackage {
                         Log.d("cache dir", cacDir);
                         cache = new File(cacDir, filename);
                         Log.d("Exist cache?", String.valueOf(cache.exists()));
-                        if (cache.createNewFile()) {
-                            try {
-                                Log.d("cache path", cache.getAbsolutePath());
-                                Log.d("file path", filepath);
-                                Myaes.decryptFile(index_surfix + 5, filepath, cache.getAbsolutePath());
-                            } catch (IOException ex) {
-                                Log.d("Something wrong", ex.toString());
-
-                            }
-                        }else{
-                            try{
-                                cache.delete();
-                                cache.createNewFile();
-                                Myaes.decryptFile(index_surfix+5, filepath, cache.getAbsolutePath());
-                            }catch (IOException ex){
-                                Log.e("Something wrong", ex.toString());
+                        if(cache.exists()){     //has cache
+                            param.args[0] = new FileReader(cache);
+                            temp = File.createTempFile(cache_name, null);
+                            SimpleEncrypt.decrypt(cache, temp);
+                            param.args[0] = new FileReader(temp);
+                        }else { //no cache
+                            temp = File.createTempFile(cache_name, null);
+                            Log.d("temp path", temp.getAbsolutePath());
+                            Log.d("file path", filepath);
+                            Myaes.decryptFile(index_surfix + 5, filepath, temp.getAbsolutePath());
+                            param.args[0] = new FileReader(temp);
+                            if(cache.createNewFile()){
+                                SimpleEncrypt.encrypt(temp, cache);
                             }
                         }
-                        param.args[0] = new FileReader(cache);
                     } else   // private text
                     {
                         Log.d("SD_PATH", extDir);
@@ -165,7 +162,7 @@ public class Module implements IXposedHookLoadPackage {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 if (packageName.indexOf("com.ostrichmyself.txtReader") != -1) {
-                    //cache.delete();
+                    temp.delete();
                 }
 
             }
