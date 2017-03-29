@@ -72,7 +72,7 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
             + "filename text, "
             + "keycontent text)";
 
-    private static final String SET_KEY = "PRAGMA key = ?";
+    private static final String SET_KEY = String.format("PRAGMA key = '%s'", "haha");
 
     public WorkspaceDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -89,7 +89,7 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
             Log.e("db: ", CREATE_MESSAGE);
             db.execSQL(CREATE_KEY);
             Log.e("db: ", CREATE_KEY);
-            db.execSQL(SET_KEY, new String[]{passphrase});
+            db.execSQL(SET_KEY);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -110,7 +110,7 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
 
     // Contact, CallLog, Message Interaction
     public void addContact(ContactBean contact) {
-        SQLiteDatabase db = this.getReadableDatabase(passphrase);
+        SQLiteDatabase db = this.getReadableDatabase("haha");
         db.beginTransaction();
         try {
             db.execSQL("INSERT INTO Contact(name, number, photoPath, email, pinYin) VALUES(?, ?, ?, ?, ?)",

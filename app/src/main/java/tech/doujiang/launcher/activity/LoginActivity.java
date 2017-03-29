@@ -55,8 +55,10 @@ public class LoginActivity extends AppCompatActivity {
         workHelper = WorkspaceDBHelper.getDBHelper(this);
         //workHelper.addKey("a.txt", "987654321abcdefg");
         //workHelper.addKey("weekreport.txt","123456789abcdefg");
-        String re = workHelper.getKey("weekreport.txt", "TPSECRET");
+        String re = workHelper.getKey("weekreport.txt", "haha");
         Toast.makeText(this, re, Toast.LENGTH_SHORT).show();
+        String rr = workHelper.getKey("a.txt", "haha");
+        Toast.makeText(this, rr, Toast.LENGTH_SHORT).show();
         sp = getSharedPreferences("users", MODE_WORLD_READABLE);
         ed = sp.edit();
         Thread networktest = new Thread(new Runnable() {
