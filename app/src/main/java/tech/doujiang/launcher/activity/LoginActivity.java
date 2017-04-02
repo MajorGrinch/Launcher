@@ -1,20 +1,30 @@
 package tech.doujiang.launcher.activity;
 
 import android.content.Intent;
-//import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import okhttp3.FormBody;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import tech.doujiang.launcher.R;
-//import tech.doujiang.launcher.database.MyDatabaseHelper;
+import tech.doujiang.launcher.database.MyDatabaseHelper;
+import tech.doujiang.launcher.model.RSAKey;
 import tech.doujiang.launcher.util.IsonlineClient;
 import tech.doujiang.launcher.util.Loginprocess;
 import tech.doujiang.launcher.database.WorkspaceDBHelper;
+import tech.doujiang.launcher.util.RSAUtil;
+import tech.doujiang.launcher.util.TempHelper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
+
+
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,8 +32,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.util.Base64;
 
-import net.sqlcipher.database.SQLiteDatabase;
+import java.util.Map;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -37,8 +48,8 @@ public class LoginActivity extends AppCompatActivity {
     private Editor ed;
     private Context context;
     private boolean networkstatus = false;
-    //private MyDatabaseHelper dbHelper;
-    private WorkspaceDBHelper workHelper;
+    private MyDatabaseHelper dbHelper;
+    //private WorkspaceDBHelper workHelper;
 
 
     @Override
@@ -52,8 +63,8 @@ public class LoginActivity extends AppCompatActivity {
         cbal = (CheckBox) findViewById(R.id.cbal);
         btnLogin = (Button) findViewById(R.id.btnlogin);
         btnExit = (Button) findViewById(R.id.btnexit);
-        workHelper = WorkspaceDBHelper.getDBHelper(this);
-        String rr = workHelper.getKey("a.txt", "TPSECRET");
+        dbHelper = MyDatabaseHelper.getDBHelper(this);
+        String rr = dbHelper.getKey("PublicKey");
         Toast.makeText(this, rr, Toast.LENGTH_SHORT).show();
         sp = getSharedPreferences("users", MODE_WORLD_READABLE);
         ed = sp.edit();
@@ -78,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Log.v("Button", "login!");
+                Log.d("Button", "login!");
                 if (networkstatus) {
                     LoginMain();
                 } else {
@@ -97,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                 System.exit(0);
             }
         });
+
         cbrp.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -119,6 +131,7 @@ public class LoginActivity extends AppCompatActivity {
         if (cbrp.isChecked() && cbal.isChecked()) {
             LoginMain();
         }
+
     }
 
     protected void LoginMain() {

@@ -65,12 +65,13 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
             + "type integer not null," // 1. INCOMING_TYPE 2. OUTGOING_TYPE
             + "primary key(id, date, text, type),"
             + "foreign key(id) references Contact(id)"
-            + ")";
+            + ");";
 
     private static final String CREATE_KEY = "create table KeyTable("
             + "id integer primary key autoincrement, "
             + "filename text, "
-            + "keycontent text)";
+            + "keycontent text"
+            + ");";
 
     public WorkspaceDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);

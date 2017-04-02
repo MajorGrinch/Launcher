@@ -56,12 +56,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             + "type integer not null," // 1. INCOMING_TYPE 2. OUTGOING_TYPE
             + "primary key(id, date, text, type),"
             + "foreign key(id) references Contact(id)"
-            + ")";
+            + ");";
 
     private static final String CREATE_KEY = "create table KeyTable("
-            + "id integer primary key autoincrement, "
-            + "filename text, "
-            + "keycontent text)";
+            + "filename text primary key, "
+            + "keycontent text"
+            + ");";
 
     public MyDatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -143,9 +143,14 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
-            db.execSQL("INSERT INTO KeyTable(filename, keycontent) VALUES(?, ?)",
-                    new String[]{filename, keycontent});
-            db.setTransactionSuccessful();
+            ContentValues values = new ContentValues();
+            values.put("keycontent", keycontent);
+            values.put("filename", filename);
+            long result = db.insertWithOnConflict("KeyTable", null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            if (result != -1)
+                db.setTransactionSuccessful();
+            else
+                throw new Exception("Insert" + filename + "failed");
             Log.d("addkey: ", "successfully!");
         } catch (Exception ex) {
             Log.e("addkey exception", ex.getMessage());
@@ -154,6 +159,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
         db.close();
     }
+
 
     public String getKey(String filename) {
         String result = null;

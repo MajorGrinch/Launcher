@@ -79,6 +79,7 @@ public class SplashActivity extends AppCompatActivity {
             intent = new Intent(this, ServerConnectService.class);
             startService(intent);
             intent = new Intent(this, LauncherActivity.class);
+            intent.putExtra("username", username);
             startActivity(intent);
             finish();
         }
