@@ -48,14 +48,5 @@
             android:layout_height="match_parent"
             android:text="更新公私钥"
             />
-
-        <ImageButton
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="@string/message"
-            android:src="@drawable/message"
-            android:scaleType="centerInside"
-            android:visibility="invisible"/>
     </LinearLayout>
 </RelativeLayout>

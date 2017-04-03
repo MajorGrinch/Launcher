@@ -55,9 +55,11 @@ public class LauncherActivity extends Activity  implements OnClickListener {
         message = (ImageButton) findViewById(R.id.message_app);
         updatekey = (Button)findViewById(R.id.update_rsa);
 
+
         phone.setOnClickListener(this);
         message.setOnClickListener(this);
         updatekey.setOnClickListener(this);
+
         dbHelper = MyDatabaseHelper.getDBHelper(this);
     }
 
@@ -78,17 +80,18 @@ public class LauncherActivity extends Activity  implements OnClickListener {
                     @Override
                     public void run() {
                         try {
+
                             Map<String, byte[]> keyMap = RSAUtil.generateKeyBytes();
                             dbHelper.addKey("PublicKey",
-                                    Base64.encodeToString(keyMap.get(RSAUtil.PUBLIC_KEY), Base64.DEFAULT));
+                                    Base64.encodeToString(keyMap.get(RSAUtil.PUBLIC_KEY), Base64.NO_WRAP));
                             dbHelper.addKey("PrivateKey",
-                                    Base64.encodeToString(keyMap.get(RSAUtil.PRIVATE_KEY),Base64.DEFAULT));
+                                    Base64.encodeToString(keyMap.get(RSAUtil.PRIVATE_KEY),Base64.NO_WRAP));
                             RSAKey sent_key = new RSAKey();
                             sent_key.setKeyMap(keyMap);
                             OkHttpClient client = new OkHttpClient();
                             RequestBody reqBody = new FormBody.Builder()
                                     .add("PublicKey",
-                                            Base64.encodeToString(keyMap.get(RSAUtil.PUBLIC_KEY),Base64.DEFAULT))
+                                            Base64.encodeToString(keyMap.get(RSAUtil.PUBLIC_KEY),Base64.NO_WRAP))
                                     .add("username", username)
                                     .build();
                             Request request = new Request.Builder()
