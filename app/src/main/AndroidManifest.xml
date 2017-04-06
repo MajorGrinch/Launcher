@@ -26,6 +26,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <application
         android:name=".model.MyApplication"
@@ -36,7 +37,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="IvtLyoPAFqGcFA9flvLGj1Z1QKxfAeoe" />
+            android:value="yKGDudTfR4djhm0fYyEOeDGRfCg8OLH2" />
         //key:开发者申请的key
         <meta-data
             android:name="xposedmodule"
@@ -178,6 +179,8 @@
             android:name=".service.FileClickService"
             android:enabled="true"
             android:exported="true" />
+        <service android:name="com.baidu.location.f" android:enabled="true"
+            android:process=":remote"></service>
 
         <provider
             android:name=".model.MyContentProvider"

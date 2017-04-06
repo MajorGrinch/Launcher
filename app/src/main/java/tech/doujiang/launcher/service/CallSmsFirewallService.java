@@ -1,29 +1,28 @@
 package tech.doujiang.launcher.service;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-
-import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.CallLog;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
+
 import com.android.internal.telephony.ITelephony;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import tech.doujiang.launcher.R;
 import tech.doujiang.launcher.activity.LauncherActivity;
@@ -63,7 +62,7 @@ public class CallSmsFirewallService extends Service {
         super.onCreate();
 
         Log.e("CallSmsFirewallService", "onCreate");
-        dbHelper = WorkspaceDBHelper.getDBHelper(this);
+        dbHelper = WorkspaceDBHelper.getDBHelper(getApplicationContext());
         contactList = dbHelper.getContact();
         tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         listener = new PhoneListener();

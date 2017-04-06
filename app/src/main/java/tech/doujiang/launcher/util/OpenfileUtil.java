@@ -3,14 +3,11 @@ package tech.doujiang.launcher.util;
 import android.app.AndroidAppHelper;
 import android.content.Context;
 import android.database.Cursor;
-
 import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
 import java.security.PrivateKey;
-
-import tech.doujiang.launcher.database.MyDatabaseHelper;
 
 import tech.doujiang.launcher.model.OpenfileListener;
 

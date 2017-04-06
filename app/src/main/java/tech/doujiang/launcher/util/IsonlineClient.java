@@ -16,62 +16,64 @@ import org.apache.http.params.CoreConnectionPNames;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 import tech.doujiang.launcher.R;
 import tech.doujiang.launcher.R.string;
+import tech.doujiang.launcher.model.IsonlineInfo;
 
 /**
  * Created by Grinch on 16/8/8.
  */
 public class IsonlineClient {
-//    http://23.83.251.48:8080/YunMobileSafe/home.jsp
+    //    http://23.83.251.48:8080/YunMobileSafe/home.jsp
     private static String TAG = "IsonlineClient";
     private String serverurl;
     private static String connectionurl = TempHelper.server_url + "/Isonline";
 
-     public IsonlineClient() {
+    public IsonlineClient() {
     }
 
-    public void onlineconnect(final String username, boolean online, boolean infoerase, boolean islost, double longitude, double latitude) {
+    public void onlineconnect(final String username, final boolean online, final boolean infoerase, final boolean islost, final double longitude, final double latitude) {
         try {
 
-            final PostInfo postInfo = new PostInfo();
-            postInfo.setUsername(username);
-            postInfo.setOnline(online);
-            postInfo.setInfoerase(infoerase);
-            postInfo.setIslost(islost);
-            postInfo.setLongitude(longitude);
-            postInfo.setLatitude(latitude);
+            final IsonlineInfo isonlineInfo = new IsonlineInfo();
+            isonlineInfo.setUsername(username);
+            isonlineInfo.setOnline(online);
+            isonlineInfo.setInfoerase(infoerase);
+            isonlineInfo.setIslost(islost);
+            isonlineInfo.setLongitude(longitude);
+            isonlineInfo.setLatitude(latitude);
 
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        HttpClient client = new DefaultHttpClient();
-
-                        HttpPost httppost = new HttpPost(connectionurl);
-                        List<NameValuePair> params = new ArrayList<NameValuePair>(4);
-                        params.add(new BasicNameValuePair("username", postInfo.getUsername()));
-                        params.add(new BasicNameValuePair("isonline", postInfo.getOnline()));
-                        params.add(new BasicNameValuePair("infoerase", postInfo.getInfoerase()));
-                        params.add(new BasicNameValuePair("islost", postInfo.getIslost()));
-                        params.add(new BasicNameValuePair("longitude", postInfo.getLongitude()));
-                        params.add(new BasicNameValuePair("latitude", postInfo.getLatitude()));
-                        httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-
-                        client.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 5000);
-                        client.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 5000);
-
-                        client.execute(httppost);
-                        Log.e(TAG, "client.execute(httppost)");
-                        Log.e(TAG, postInfo.getUsername());
-                        HttpResponse response = client.execute(httppost);
-                        if (response.getStatusLine().getStatusCode() == 200) {
-                            String outcome = getInfo(response);
-                            Log.e(TAG + "Response", outcome.toString());
-                        } else {
-                            Log.e(TAG + "Response", getInfo(response));
+                        URL url = new URL(connectionurl);
+                        HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                        httpURLConnection.setConnectTimeout(5000);
+                        httpURLConnection.setReadTimeout(5000);
+                        httpURLConnection.setDoOutput(true);
+                        httpURLConnection.setDoInput(true);
+                        httpURLConnection.setUseCaches(false);
+                        httpURLConnection.setRequestProperty("Content-type",
+                                "application/x-java-serialized-object");
+                        httpURLConnection.setRequestMethod("POST");
+                        httpURLConnection.connect();
+                        OutputStream os= httpURLConnection.getOutputStream();
+                        ObjectOutputStream oos = new ObjectOutputStream(os);
+                        oos.writeObject(isonlineInfo);
+                        oos.flush();
+                        oos.close();
+                        os.close();
+                        if(httpURLConnection.getResponseCode()==HttpURLConnection.HTTP_OK){
+                            String content = getInfo(httpURLConnection.getInputStream());
+                            Log.d(TAG, content);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -84,71 +86,7 @@ public class IsonlineClient {
         }
     }
 
-    private class PostInfo {
-        private String username;
-        private String online;
-        private String infoerase;
-        private String islost;
-        private String longitude;
-        private String latitude;
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getOnline() {
-            return online;
-        }
-
-        public void setOnline(boolean online) {
-            this.online = Boolean.toString(online);
-        }
-
-        public String getInfoerase() {
-            return infoerase;
-        }
-
-        public void setInfoerase(boolean infoerase) {
-            this.infoerase = Boolean.toString(infoerase);
-        }
-
-        public String getIslost() {
-            return islost;
-        }
-
-        public void setIslost(boolean islost) {
-            this.islost = Boolean.toString(islost);
-        }
-
-        public String getLongitude() {
-            return longitude;
-        }
-
-        public void setLongitude(double longitude) {
-            this.longitude = Double.toString(longitude);
-        }
-
-        public String getLatitude() {
-            return latitude;
-        }
-
-        public void setLatitude(double latitude) {
-            this.latitude = Double.toString(latitude);
-        }
-    }
-
-    public void update() {
-
-    }
-
-    private static String getInfo(HttpResponse response) throws Exception {
-
-        HttpEntity entity = response.getEntity();
-        InputStream is = entity.getContent();
+    private static String getInfo(InputStream is) throws Exception {
         byte[] data = read(is);
         return new String(data, "UTF-8");
     }

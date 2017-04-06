@@ -11,7 +11,6 @@ import android.os.StrictMode;
 import android.util.Log;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.security.PrivateKey;
 
 
 import okhttp3.FormBody;
@@ -19,9 +18,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import android.util.Base64;
+
 import tech.doujiang.launcher.database.MyDatabaseHelper;
-import tech.doujiang.launcher.util.RSAUtil;
+
 import tech.doujiang.launcher.util.TempHelper;
 
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)

@@ -65,7 +65,8 @@ public class LoginActivity extends AppCompatActivity {
         btnExit = (Button) findViewById(R.id.btnexit);
         dbHelper = MyDatabaseHelper.getDBHelper(this);
         String rr = dbHelper.getKey("PublicKey");
-        Toast.makeText(this, rr, Toast.LENGTH_SHORT).show();
+        //Log.d("PublicKey", rr);
+        //Toast.makeText(this, rr, Toast.LENGTH_SHORT).show();
         sp = getSharedPreferences("users", MODE_WORLD_READABLE);
         ed = sp.edit();
         Thread networktest = new Thread(new Runnable() {

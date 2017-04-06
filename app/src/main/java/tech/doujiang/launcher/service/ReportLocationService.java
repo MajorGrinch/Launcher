@@ -25,6 +25,7 @@ public class ReportLocationService extends Service {
     public double longitude = 0.0;
     public double latitude = 0.0;
     private LocationClient locationClient = null;
+
     private int[] code = new int[]{61, 65, 66, 161};
 
     @Override
@@ -35,24 +36,26 @@ public class ReportLocationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        locationClient =  new LocationClient(getApplicationContext());
+        initLocation();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.e(TAG, "ReportLoc destroyed");
+        locationClient.stop();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (username == "") {
             if (intent == null || intent.getStringExtra("username") == "") {
-                return 0;
+                return Service.START_STICKY;
             }
             username = intent.getStringExtra("username");
         }
-        locationClient = new LocationClient(this);
-        initLocation();
+        //位置变化明显，会回调位置
         locationClient.registerLocationListener(new BDLocationListener() {
             @Override
             public void onReceiveLocation(BDLocation location) {
@@ -68,6 +71,10 @@ public class ReportLocationService extends Service {
                 }
             }
 
+            @Override
+            public void onConnectHotSpotMessage(String s, int i) {
+
+            }
         });
         locationClient.start();
         Log.e(TAG, "ReportLocation created");
@@ -81,14 +88,13 @@ public class ReportLocationService extends Service {
         option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
         int span=5000;
         option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
-        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
+        option.setIsNeedAddress(false);//可选，设置是否需要地址信息，默认不需要
         option.setOpenGps(true);//可选，默认false,设置是否使用gps
         option.setIgnoreKillProcess(false);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
         option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
         option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤gps仿真结果，默认需要
         locationClient.setLocOption(option);
     }
-
 }
 
 

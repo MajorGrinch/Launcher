@@ -3,21 +3,11 @@ package tech.doujiang.launcher.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-
-
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-
-import android.telecom.Call;
 import android.util.Log;
-import android.widget.Toast;
 
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import tech.doujiang.launcher.model.CallLogBean;
 import tech.doujiang.launcher.model.ContactBean;
