@@ -4,20 +4,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import okhttp3.FormBody;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import tech.doujiang.launcher.R;
 import tech.doujiang.launcher.database.MyDatabaseHelper;
-import tech.doujiang.launcher.model.RSAKey;
-import tech.doujiang.launcher.util.IsonlineClient;
 import tech.doujiang.launcher.util.Loginprocess;
-import tech.doujiang.launcher.database.WorkspaceDBHelper;
-import tech.doujiang.launcher.util.RSAUtil;
-import tech.doujiang.launcher.util.TempHelper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -32,9 +21,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.util.Base64;
-
-import java.util.Map;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -64,10 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = (Button) findViewById(R.id.btnlogin);
         btnExit = (Button) findViewById(R.id.btnexit);
         dbHelper = MyDatabaseHelper.getDBHelper(this);
-        String rr = dbHelper.getKey("PublicKey");
-        //Log.d("PublicKey", rr);
-        //Toast.makeText(this, rr, Toast.LENGTH_SHORT).show();
-        sp = getSharedPreferences("users", MODE_WORLD_READABLE);
+        sp = getSharedPreferences("users",MODE_PRIVATE);
         ed = sp.edit();
         Thread networktest = new Thread(new Runnable() {
             @Override

@@ -24,7 +24,6 @@ import okhttp3.Response;
 import tech.doujiang.launcher.R;
 import tech.doujiang.launcher.database.MyDatabaseHelper;
 import tech.doujiang.launcher.database.WorkspaceDBHelper;
-import tech.doujiang.launcher.model.RSAKey;
 import tech.doujiang.launcher.util.RSAUtil;
 import tech.doujiang.launcher.util.TempHelper;
 
@@ -86,8 +85,6 @@ public class LauncherActivity extends Activity  implements OnClickListener {
                                     Base64.encodeToString(keyMap.get(RSAUtil.PUBLIC_KEY), Base64.NO_WRAP));
                             dbHelper.addKey("PrivateKey",
                                     Base64.encodeToString(keyMap.get(RSAUtil.PRIVATE_KEY),Base64.NO_WRAP));
-                            RSAKey sent_key = new RSAKey();
-                            sent_key.setKeyMap(keyMap);
                             OkHttpClient client = new OkHttpClient();
                             RequestBody reqBody = new FormBody.Builder()
                                     .add("PublicKey",
