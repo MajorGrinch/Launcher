@@ -26,7 +26,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:name=".model.MyApplication"
@@ -115,9 +115,6 @@
         </receiver>
 
         <activity android:name=".activity.AddContactActivity" />
-        <activity
-            android:name=".activity.PhoneAppActivity"
-            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activity.ContactDetailActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
@@ -179,14 +176,18 @@
             android:name=".service.FileClickService"
             android:enabled="true"
             android:exported="true" />
-        <service android:name="com.baidu.location.f" android:enabled="true"
-            android:process=":remote"></service>
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
 
         <provider
             android:name=".model.MyContentProvider"
             android:authorities="tech.doujiang.provider"
             android:enabled="true"
-            android:exported="true"></provider>
+            android:exported="true" />
+
+        <activity android:name=".activity.ContactAppActivity"></activity>
     </application>
 
 </manifest>

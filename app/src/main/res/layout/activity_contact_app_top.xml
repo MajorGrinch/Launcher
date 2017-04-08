@@ -1,13 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="30dp"
-    android:layout_alignParentBottom="true">
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/blue">
+
+
+    <LinearLayout
+        android:id="@+id/phone_contact_recent"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_contact_recent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="@string/recent_contact"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/phone_call_log"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical">
@@ -18,28 +39,30 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:text="@string/call_log"
-            android:textColor="#18940A"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/phone_contact"
+        android:id="@+id/phone_contact_all"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/text_contact"
+            android:id="@+id/text_contact_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:text="@string/contact_list"
-            android:textColor="#18940A"
+            android:text="联系人"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
     </LinearLayout>
+
+
 
 </LinearLayout>

@@ -18,9 +18,8 @@ import java.util.Map;
 
 import tech.doujiang.launcher.R;
 import tech.doujiang.launcher.database.WorkspaceDBHelper;
-import tech.doujiang.launcher.fragment.ContactListFragment;
+import tech.doujiang.launcher.fragment.ContactStraggeredFragment;
 import tech.doujiang.launcher.model.ContactBean;
-import tech.doujiang.launcher.model.SMSBean;
 import tech.doujiang.launcher.util.BaseIntentUtil;
 
 public class ContactDetailActivity extends AppCompatActivity {
@@ -40,7 +39,7 @@ public class ContactDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contact_detail);
         Intent intent = getIntent();
         position = intent.getIntExtra("position", 0);
-        contact = ContactListFragment.contactList.get(position);
+        contact = ContactStraggeredFragment.contactList.get(position);
         dbHelper = WorkspaceDBHelper.getDBHelper(this);
         initView();
         initEvent();

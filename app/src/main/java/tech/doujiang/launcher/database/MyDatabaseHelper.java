@@ -194,7 +194,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     public ArrayList<CallLogBean> getCallLog() {
         ArrayList<CallLogBean> callLogs = new ArrayList<CallLogBean>();
-        Cursor cursor = this.getWritableDatabase().rawQuery("SELECT * FROM CallLog LEFT OUTER JOIN Contact ORDER BY date DESC", null);
+        Cursor cursor = this.getWritableDatabase()
+                .rawQuery(
+                        "SELECT * FROM CallLog LEFT OUTER JOIN Contact ON CallLog.id=Contact.id ORDER BY date DESC", null);
         while (cursor.moveToNext()) {
             CallLogBean callLog = new CallLogBean();
             callLog.setId(cursor.getInt(cursor.getColumnIndex("id")));

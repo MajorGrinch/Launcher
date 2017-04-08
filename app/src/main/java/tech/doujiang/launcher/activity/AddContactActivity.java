@@ -32,11 +32,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import tech.doujiang.launcher.R;
+import tech.doujiang.launcher.database.MyDatabaseHelper;
 import tech.doujiang.launcher.database.WorkspaceDBHelper;
 import tech.doujiang.launcher.model.ContactBean;
 
 public class AddContactActivity extends AppCompatActivity implements OnClickListener{
-    private WorkspaceDBHelper dbHelper;
+    private MyDatabaseHelper dbHelper;
     private ImageButton goBack, contactComplete, contactPhoto;
     private EditText contactName, contactNum, contactEmail;
     private ContactBean contact;
@@ -51,7 +52,7 @@ public class AddContactActivity extends AppCompatActivity implements OnClickList
         setContentView(R.layout.activity_add_contact);
 
         contact = new ContactBean();
-        dbHelper = WorkspaceDBHelper.getDBHelper(this.getApplicationContext());
+        dbHelper = MyDatabaseHelper.getDBHelper(this.getApplicationContext());
 
         goBack = (ImageButton)findViewById(R.id.btn_go_back);
         contactComplete = (ImageButton) findViewById(R.id.btn_complete);

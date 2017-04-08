@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -67,7 +68,7 @@ public class LauncherActivity extends Activity  implements OnClickListener {
         Intent intent = null;
         switch (view.getId()) {
             case R.id.phone_app:
-                intent = new Intent(this, PhoneAppActivity.class);
+                intent = new Intent(this, ContactAppActivity.class);
                 startActivity(intent);
                 break;
             case R.id.message_app:

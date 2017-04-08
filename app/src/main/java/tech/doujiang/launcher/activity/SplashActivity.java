@@ -43,49 +43,26 @@ public class SplashActivity extends AppCompatActivity {
     private String useron;
     private Loginfo loginfo;
     private boolean confirmstatus = false;
-//    private Handler handler = new Handler() {
-//        public void handleMessage(android.os.Message msg) {
-//            switch (msg.what) {
-//                case SERVER_URL_ERROR:
-//                    Toast.makeText(getApplicationContext(), "·þÎñÆ÷Â·¾¶²»ÕýÈ·", 1).show();
-//                    loadMainUI();
-//                    break;
-//                case SERVER_ERROR:
-//                    Toast.makeText(getApplicationContext(), "·þÎñÆ÷ÄÚ²¿Òì³£", 1).show();
-//                    loadMainUI();
-//                    break;
-//                case GET_INFO_SUCCESS:
-//                    Toast.makeText(getApplicationContext(), "Á¬½Ó³É¹¦£¬Êý¾Ý¿âÒÑ¸üÐÂ", 1).show();
-//                    loadMainUI();
-//                    break;
-//                case DOWNLOAD_ERROR:
-//                    Toast.makeText(getApplicationContext(), "ÏÂÔØÊý¾ÝÒì³£", 1).show();
-//                    loadMainUI();
-//                    break;
-//            }
-//        };
-//    };
 
     private void loadMainUI(String username) {
         if (confirmstatus) {
-            Intent intent = new Intent(this, CallSmsFirewallService.class);
-            startService(intent);
-            intent = new Intent(this, ReportLocationService.class);
-            intent.putExtra("username", username);
-            startService(intent);
-            intent = new Intent(this, RequestFileService.class);
-            intent.putExtra("username", username);
-            startService(intent);
-            intent = new Intent(this, ServerConnectService.class);
-            startService(intent);
-            intent = new Intent(this, LauncherActivity.class);
+//            Intent intent = new Intent(this, CallSmsFirewallService.class);
+//            startService(intent);
+//            intent = new Intent(this, ReportLocationService.class);
+//            intent.putExtra("username", username);
+//            startService(intent);
+//            intent = new Intent(this, RequestFileService.class);
+//            intent.putExtra("username", username);
+//            startService(intent);
+//            intent = new Intent(this, ServerConnectService.class);
+//            startService(intent);
+            Intent intent = new Intent(this, LauncherActivity.class);
             intent.putExtra("username", username);
             startActivity(intent);
             finish();
         }
         else{
             Log.e("State: ", "Unauthorized account");
-//            Toast.makeText(getApplicationContext(), "Unauthorized account", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -118,13 +95,5 @@ public class SplashActivity extends AppCompatActivity {
         });
         userconfirm.start();
 
-//        Thread requestkey = new Thread( new Runnable(){
-//            @Override
-//            public void run(){
-//                String key = RequestDESKey.requestkey();
-//                Log.v("Key", key);
-//            }
-//        });
-//        requestkey.start();
     }
 }
