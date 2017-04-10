@@ -42,9 +42,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_MESSAGE = "create table Message("
             + "id integer not null, "
             + "date integer not null,"
-            + "text integer not null,"
+            + "content text not null,"
             + "type integer not null," // 1. INCOMING_TYPE 2. OUTGOING_TYPE
-            + "primary key(id, date, text, type),"
+            + "primary key(id, date, content, type),"
             + "foreign key(id) references Contact(id)"
             + ");";
 
@@ -119,7 +119,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
-            db.execSQL("INSERT INTO Message(id, date, text, type) VALUES(?, ?, ?, ?)",
+            db.execSQL("INSERT INTO Message(id, date, content, type) VALUES(?, ?, ?, ?)",
                     new String[]{Integer.toString(message.getId()), Long.toString(message.getDate()),
                             message.getText(), Integer.toString(message.getType())});
             db.setTransactionSuccessful();
@@ -215,8 +215,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<SMSBean> getSMS() {
         ArrayList<SMSBean> sms = new ArrayList<SMSBean>();
         Cursor cursor = this.getWritableDatabase().rawQuery(
-                " SELECT Contact.id AS cid, name, number, count(*) AS count, date, text "
-                        + " FROM Contact LEFT OUTER JOIN Message ON Contact.id = Message.id "
+                " SELECT Contact.id AS cid, name, number, count(*) AS count, date, content "
+                        + " FROM Contact, Message ON Contact.id = Message.id "
                         + " GROUP BY Contact.id", null);
         while (cursor.moveToNext()) {
             SMSBean smsBean = new SMSBean();
@@ -225,7 +225,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             smsBean.setNumber(cursor.getString(cursor.getColumnIndex("number")));
             smsBean.setMsg_count(cursor.getInt(cursor.getColumnIndex("count")));
             smsBean.setDate(cursor.getLong(cursor.getColumnIndex("date")));
-            smsBean.setMsg_snippet(cursor.getString(cursor.getColumnIndex("text")));
+            smsBean.setMsg_snippet(cursor.getString(cursor.getColumnIndex("content")));
             sms.add(smsBean);
         }
         cursor.close();
@@ -247,7 +247,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<MessageBean> getMessage(String id) {
         ArrayList<MessageBean> messages = new ArrayList<MessageBean>();
         Cursor cursor = this.getWritableDatabase().rawQuery(
-                " SELECT Contact.id as cid, name, number, date, text, type "
+                " SELECT Contact.id as cid, name, number, date, content, type "
                         + "FROM Contact LEFT OUTER JOIN Message "
                         + " ON Contact.id = Message.id "
                         + " WHERE Contact.id = ? ORDER BY date ASC", new String[]{id});
@@ -257,7 +257,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             message.setName(cursor.getString(cursor.getColumnIndex("name")));
             message.setNumber(cursor.getString(cursor.getColumnIndex("number")));
             message.setDate(cursor.getLong(cursor.getColumnIndex("date")));
-            message.setText(cursor.getString(cursor.getColumnIndex("text")));
+            message.setText(cursor.getString(cursor.getColumnIndex("content")));
             message.setType(cursor.getInt(cursor.getColumnIndex("type")));
             messages.add(message);
         }
