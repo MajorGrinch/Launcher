@@ -121,7 +121,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         try {
             db.execSQL("INSERT INTO Message(id, date, content, type) VALUES(?, ?, ?, ?)",
                     new String[]{Integer.toString(message.getId()), Long.toString(message.getDate()),
-                            message.getText(), Integer.toString(message.getType())});
+                            message.getContent(), Integer.toString(message.getType())});
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -248,7 +248,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         ArrayList<MessageBean> messages = new ArrayList<MessageBean>();
         Cursor cursor = this.getWritableDatabase().rawQuery(
                 " SELECT Contact.id as cid, name, number, date, content, type "
-                        + "FROM Contact LEFT OUTER JOIN Message "
+                        + "FROM Contact, Message "
                         + " ON Contact.id = Message.id "
                         + " WHERE Contact.id = ? ORDER BY date ASC", new String[]{id});
         while (cursor.moveToNext()) {
@@ -257,7 +257,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             message.setName(cursor.getString(cursor.getColumnIndex("name")));
             message.setNumber(cursor.getString(cursor.getColumnIndex("number")));
             message.setDate(cursor.getLong(cursor.getColumnIndex("date")));
-            message.setText(cursor.getString(cursor.getColumnIndex("content")));
+            message.setContent(cursor.getString(cursor.getColumnIndex("content")));
             message.setType(cursor.getInt(cursor.getColumnIndex("type")));
             messages.add(message);
         }

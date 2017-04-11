@@ -5,6 +5,8 @@ package tech.doujiang.launcher.util;
  */
 
 
+import android.util.Base64;
+
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyFactory;
@@ -25,6 +27,12 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 //import org.apache.commons.codec.binary.Base64;
 
@@ -170,5 +178,18 @@ public class RSAUtil {
         }
         return null;
 
+    }
+
+    public static void UpdateRSAKey(String key, String username, okhttp3.Callback callback){
+        OkHttpClient client = new OkHttpClient();
+        RequestBody reqBody = new FormBody.Builder()
+                .add("PublicKey", key)
+                .add("username", username)
+                .build();
+        Request request = new Request.Builder()
+                .url(TempHelper.server_url + "/UpdateRSA")
+                .post(reqBody)
+                .build();
+        client.newCall(request).enqueue(callback);
     }
 }

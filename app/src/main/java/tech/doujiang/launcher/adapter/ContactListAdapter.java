@@ -46,7 +46,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
         ContactBean contact = mcontactList.get(position);
         holder.name.setText(contact.getDisplayName());
-        holder.photo.setImageResource(R.drawable.contact_img_list);
+        holder.photo.setImageResource(R.drawable.contacts);
     }
 
     @Override

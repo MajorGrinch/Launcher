@@ -10,16 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.util.List;
-
 import tech.doujiang.launcher.R;
 import tech.doujiang.launcher.database.MyDatabaseHelper;
 import tech.doujiang.launcher.fragment.CallLogListFragment;
 import tech.doujiang.launcher.fragment.ContactListFragment;
 import tech.doujiang.launcher.fragment.ContactStraggeredFragment;
-import tech.doujiang.launcher.model.ContactBean;
 
 public class ContactAppActivity extends FragmentActivity {
 
@@ -38,6 +33,7 @@ public class ContactAppActivity extends FragmentActivity {
     private LinearLayout phone_contact_all;
 
     private SearchView searchView;
+
 
 
     @Override

@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:background="@color/blue">
-
+    android:background="@color/colorPrimary"
+    android:layout_alignParentBottom="true">
 
     <LinearLayout
         android:id="@+id/phone_contact_recent"
@@ -62,7 +61,5 @@
             android:textStyle="bold" />
 
     </LinearLayout>
-
-
 
 </LinearLayout>

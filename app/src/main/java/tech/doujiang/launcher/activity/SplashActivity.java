@@ -2,9 +2,6 @@ package tech.doujiang.launcher.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,15 +10,8 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.File;
 
 import tech.doujiang.launcher.R;
-import tech.doujiang.launcher.service.CallSmsFirewallService;
-import tech.doujiang.launcher.service.ReportLocationService;
-import tech.doujiang.launcher.service.RequestFileService;
-import tech.doujiang.launcher.service.ServerConnectService;
 import tech.doujiang.launcher.util.Loginfo;
 import tech.doujiang.launcher.util.Loginprocess;
 

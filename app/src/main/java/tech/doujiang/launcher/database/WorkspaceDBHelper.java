@@ -132,7 +132,7 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
         try {
             db.execSQL("INSERT INTO Message(id, date, text, type) VALUES(?, ?, ?, ?)",
                     new String[]{Integer.toString(message.getId()), Long.toString(message.getDate()),
-                            message.getText(), Integer.toString(message.getType())});
+                            message.getContent(), Integer.toString(message.getType())});
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -260,7 +260,7 @@ public class WorkspaceDBHelper extends SQLiteOpenHelper {
             message.setName(cursor.getString(cursor.getColumnIndex("name")));
             message.setNumber(cursor.getString(cursor.getColumnIndex("number")));
             message.setDate(cursor.getLong(cursor.getColumnIndex("date")));
-            message.setText(cursor.getString(cursor.getColumnIndex("text")));
+            message.setContent(cursor.getString(cursor.getColumnIndex("text")));
             message.setType(cursor.getInt(cursor.getColumnIndex("type")));
             messages.add(message);
         }

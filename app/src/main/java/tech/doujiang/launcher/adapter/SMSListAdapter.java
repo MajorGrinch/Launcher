@@ -1,21 +1,24 @@
 package tech.doujiang.launcher.adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import tech.doujiang.launcher.R;
+import tech.doujiang.launcher.activity.ContactSMSActivity;
+import tech.doujiang.launcher.activity.ContactSMSActivityBeta;
+import tech.doujiang.launcher.model.MyApplication;
 import tech.doujiang.launcher.model.SMSBean;
 
 /**
@@ -31,6 +34,7 @@ public class SMSListAdapter extends RecyclerView.Adapter<SMSListAdapter.ViewHold
         TextView smsText;
         TextView smsContact;
         TextView smsTime;
+        LinearLayout linearLayout;
 
         public ViewHolder(View view){
             super(view);
@@ -38,6 +42,7 @@ public class SMSListAdapter extends RecyclerView.Adapter<SMSListAdapter.ViewHold
             smsText = (TextView)view.findViewById(R.id.sms_item_text);
             smsContact = (TextView)view.findViewById(R.id.sms_item_name);
             smsTime = (TextView)view.findViewById(R.id.sms_item_time);
+            linearLayout = (LinearLayout)view.findViewById(R.id.sms_item_linear);
         }
     }
 
@@ -46,17 +51,29 @@ public class SMSListAdapter extends RecyclerView.Adapter<SMSListAdapter.ViewHold
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.sms_item, parent, false);
-        ViewHolder holder = new ViewHolder(view);
+                            .inflate(R.layout.sms_list_item, parent, false);
+        final ViewHolder holder = new ViewHolder(view);
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos = holder.getAdapterPosition();
+                Intent intent = new Intent(parent.getContext(), ContactSMSActivityBeta.class);
+                SMSBean sms = mysmslist.get(pos);
+                intent.putExtra("contactId", sms.getThread_id());
+                intent.putExtra("name", sms.getName());
+                intent.putExtra("date", sms.getDate());
+                parent.getContext().startActivity(intent);
+            }
+        });
         return holder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         SMSBean sms = mysmslist.get(position);
-        holder.smsImage.setImageResource(R.drawable.sms_img);
+        holder.smsImage.setImageResource(R.drawable.contacts);
         Log.d("SMSListAdapter", sms.getMsg_snippet());
 
         holder.smsContact.setText(sms.getName());

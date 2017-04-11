@@ -22,52 +22,50 @@ public class Loginprocess {
     }
 
     public static boolean networktest() {
-//        try {
-//            String connectionurl = serverurl + "/networktest";
-//            OkHttpClient client = new OkHttpClient.Builder()
-//                                    .connectTimeout(5, java.util.concurrent.TimeUnit.SECONDS)
-//                                    .build();
-//            Request request = new Request.Builder()
-//                    .url(connectionurl)
-//                    .build();
-//            Response response = client.newCall(request).execute();
-//            Log.d("Network test", String.valueOf(response.code()));
-//            if (response.code() == 200) {
-//                return true;
-//            }
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }//TODO: remeber to recovery this code and change the next line
-        return true;
+        try {
+            String connectionurl = serverurl + "/networktest";
+            OkHttpClient client = new OkHttpClient.Builder()
+                                    .connectTimeout(5, java.util.concurrent.TimeUnit.SECONDS)
+                                    .build();
+            Request request = new Request.Builder()
+                    .url(connectionurl)
+                    .build();
+            Response response = client.newCall(request).execute();
+            Log.d("Network test", String.valueOf(response.code()));
+            if (response.code() == 200) {
+                return true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 
     public boolean confirm() {
-//        try {
-//            String username = myinfo.getUsername();
-//            String psw = myinfo.getPsw();
-//            String connectionurl = serverurl + "/Userconfirm";
-//            OkHttpClient client = new OkHttpClient.Builder()
-//                                    .connectTimeout(5, java.util.concurrent.TimeUnit.SECONDS)
-//                                    .build();
-//            RequestBody formBody = new FormBody.Builder()
-//                    .add("username", username)
-//                    .add("psw", psw)
-//                    .build();
-//            Request request = new Request.Builder()
-//                    .url(connectionurl)
-//                    .post(formBody)
-//                    .build();
-//            Response response = client.newCall(request).execute();
-//            if (response.isSuccessful()) {
-//                JSONObject result = new JSONObject(response.body().string());
-//                if (result.getString("userid") != null)
-//                    return true;
-//            }
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//        return false; 
-        // TODO: 08/04/2017 remember to recovery this code
-        return true;
+        try {
+            String username = myinfo.getUsername();
+            String psw = myinfo.getPsw();
+            String connectionurl = serverurl + "/Userconfirm";
+            OkHttpClient client = new OkHttpClient.Builder()
+                                    .connectTimeout(5, java.util.concurrent.TimeUnit.SECONDS)
+                                    .build();
+            RequestBody formBody = new FormBody.Builder()
+                    .add("username", username)
+                    .add("psw", psw)
+                    .build();
+            Request request = new Request.Builder()
+                    .url(connectionurl)
+                    .post(formBody)
+                    .build();
+            Response response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                JSONObject result = new JSONObject(response.body().string());
+                if (result.getString("userid") != null)
+                    return true;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 }

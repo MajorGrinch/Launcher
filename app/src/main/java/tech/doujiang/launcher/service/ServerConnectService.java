@@ -17,7 +17,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import tech.doujiang.launcher.R;
-import tech.doujiang.launcher.activity.LauncherActivity;
+import tech.doujiang.launcher.activity.LauncherActivityB;
 import tech.doujiang.launcher.activity.LoginActivity;
 import tech.doujiang.launcher.util.Constant;
 
@@ -50,7 +50,7 @@ public class ServerConnectService extends Service {
                 .setContentText("Keep tracing location.");
         Intent resultIntent = new Intent(this, LoginActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(LauncherActivity.class);
+        stackBuilder.addParentStack(LauncherActivityB.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);

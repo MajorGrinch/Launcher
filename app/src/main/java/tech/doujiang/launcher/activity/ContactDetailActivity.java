@@ -50,7 +50,7 @@ public class ContactDetailActivity extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeFile(contact.getPhotoPath());
             contactPhoto.setImageBitmap(bitmap);
         } else {
-            contactPhoto.setImageResource(R.drawable.contact);
+            contactPhoto.setImageResource(R.drawable.contacts);
         }
         contactName.setText(contact.getDisplayName());
         contactNum.setText(contact.getPhoneNum());
@@ -77,7 +77,7 @@ public class ContactDetailActivity extends AppCompatActivity {
                 map.put("name", contact.getDisplayName());
                 map.put("number", contact.getPhoneNum());
                 BaseIntentUtil.intentSysDefault(ContactDetailActivity.this,
-                        MessageBoxListActivity.class, map);
+                        ContactSMSActivity.class, map);
             }
         });
     }

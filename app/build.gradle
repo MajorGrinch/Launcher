@@ -25,11 +25,10 @@ android {
 
     defaultConfig {
         applicationId "tech.doujiang.launcher"
-        minSdkVersion 15
-        targetSdkVersion 19
+        minSdkVersion 19
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
-        generatedDensities = []
     }
     buildTypes {
         release {
@@ -46,8 +45,10 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile files('libs/apache-httpcomponents-httpclient.jar')
     compile files('libs/apache-httpcomponents-httpcore.jar')
-    compile 'com.android.support:support-v4:25.0.0'
+    compile 'com.android.support:support-v4:25.1.1'
     compile 'com.android.support:appcompat-v7:25.1.1'
     compile 'com.android.support:recyclerview-v7:25.1.1'
     compile files('libs/BaiduLBS_Android.jar')
+    compile 'com.android.support:design:25.1.1'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 }

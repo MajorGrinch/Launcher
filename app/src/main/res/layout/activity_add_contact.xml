@@ -68,7 +68,7 @@
           <ImageView
               android:layout_width="20dp"
               android:layout_height="match_parent"
-              android:src="@drawable/contact"
+              android:src="@drawable/edit"
               android:scaleType="centerInside"/>
             <EditText
                 android:id="@+id/contact_name"

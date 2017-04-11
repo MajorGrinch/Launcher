@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import tech.doujiang.launcher.R;
-import tech.doujiang.launcher.activity.LauncherActivity;
+import tech.doujiang.launcher.activity.LauncherActivityB;
 import tech.doujiang.launcher.activity.LoginActivity;
 import tech.doujiang.launcher.database.WorkspaceDBHelper;
 import tech.doujiang.launcher.model.CallLogBean;
@@ -78,7 +78,7 @@ public class CallSmsFirewallService extends Service {
                 .setContentText("Your phone is under protection.");
         Intent resultIntent = new Intent(this, LoginActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(LauncherActivity.class);
+        stackBuilder.addParentStack(LauncherActivityB.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);

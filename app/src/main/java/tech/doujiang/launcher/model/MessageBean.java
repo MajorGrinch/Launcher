@@ -9,7 +9,7 @@ public class MessageBean {
     private String name;
     private String number;
     private Long date;
-    private String text;
+    private String content;
     private int type;   // 1 means incoming, 2 means outgoing
     private boolean is_read;
 
@@ -24,12 +24,12 @@ public class MessageBean {
         this.name = name;
     }
 
-    public String getText() {
-        return text;
+    public String getContent() {
+        return content;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setContent(String text) {
+        this.content = text;
     }
 
     public boolean isIs_read() {

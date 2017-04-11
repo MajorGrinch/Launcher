@@ -3,10 +3,8 @@ package tech.doujiang.launcher.Receiver;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Telephony;
@@ -20,16 +18,15 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import tech.doujiang.launcher.R;
-import tech.doujiang.launcher.activity.LauncherActivity;
+import tech.doujiang.launcher.activity.LauncherActivityB;
 import tech.doujiang.launcher.activity.LoginActivity;
-import tech.doujiang.launcher.database.WorkspaceDBHelper;
+import tech.doujiang.launcher.database.MyDatabaseHelper;
 import tech.doujiang.launcher.model.ContactBean;
 import tech.doujiang.launcher.model.MessageBean;
 import tech.doujiang.launcher.util.Constant;
-import tech.doujiang.launcher.util.SmsWriteOpUtil;
 
 public class SmsReceiver extends BroadcastReceiver {
-    private WorkspaceDBHelper dbHelper;
+    private MyDatabaseHelper dbHelper;
     private ArrayList<ContactBean> contactList;
     private Constant constant;
     private ArrayList<String> numbers;
@@ -42,7 +39,7 @@ public class SmsReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (dbHelper == null) {
-            dbHelper = WorkspaceDBHelper.getDBHelper(context);
+            dbHelper = MyDatabaseHelper.getDBHelper(context);
         }
 
         Object [] pdus= (Object[]) intent.getExtras().get("pdus");
@@ -61,7 +58,7 @@ public class SmsReceiver extends BroadcastReceiver {
             if (numbers.contains(sender) && smsMessage.getTimestampMillis() > maxDate + 10) {
                     MessageBean message = new MessageBean();
                     message.setType(constant.LAYOUT_INCOMING);
-                    message.setText(content);
+                    message.setContent(content);
                     message.setDate(smsMessage.getTimestampMillis());
                     contactList = dbHelper.getContact();
                     for (ContactBean contact : contactList) {
@@ -74,7 +71,7 @@ public class SmsReceiver extends BroadcastReceiver {
 
                 Log.e("MessageId: ", Integer.toString(message.getId()));
                 Log.e("MessageDate: ", Long.toString(message.getDate()));
-                Log.e("MessageText: ", message.getText());
+                Log.e("MessageText: ", message.getContent());
                 Log.e("MessageType: ", Integer.toString(message.getType()));
             }
 
@@ -105,7 +102,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 .setContentText("Your phone is under protection.");
         Intent resultIntent = new Intent(context, LoginActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addParentStack(LauncherActivity.class);
+        stackBuilder.addParentStack(LauncherActivityB.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(resultPendingIntent);
