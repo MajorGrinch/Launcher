@@ -1,5 +1,7 @@
 package tech.doujiang.launcher.adapter;
 
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +12,10 @@ import android.widget.TextView;
 import java.util.List;
 
 import tech.doujiang.launcher.R;
+import tech.doujiang.launcher.activity.AddContactActivity;
+import tech.doujiang.launcher.activity.ContactAppActivity;
 import tech.doujiang.launcher.model.ContactBean;
+import tech.doujiang.launcher.model.MyApplication;
 
 /**
  * Created by grinch on 08/04/2017.

@@ -9,16 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import tech.doujiang.launcher.R;
-import tech.doujiang.launcher.activity.ContactSMSActivity;
 import tech.doujiang.launcher.activity.ContactSMSActivityBeta;
-import tech.doujiang.launcher.model.MyApplication;
 import tech.doujiang.launcher.model.SMSBean;
 
 /**

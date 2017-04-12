@@ -36,15 +36,15 @@ import tech.doujiang.launcher.database.MyDatabaseHelper;
 import tech.doujiang.launcher.database.WorkspaceDBHelper;
 import tech.doujiang.launcher.model.ContactBean;
 
-public class AddContactActivity extends AppCompatActivity implements OnClickListener{
+public class AddContactActivity extends AppCompatActivity implements OnClickListener {
     private MyDatabaseHelper dbHelper;
     private ImageButton goBack, contactComplete, contactPhoto;
     private EditText contactName, contactNum, contactEmail;
     private ContactBean contact;
     public Uri imageUri;
-    public  static  final  int TAKE_PHOTO = 1;
-    public static  final  int CROP_PHOTO = 2;
-    public static  final  int CHOOSE_PHOTO = 3;
+    public static final int TAKE_PHOTO = 1;
+    public static final int CROP_PHOTO = 2;
+    public static final int CHOOSE_PHOTO = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class AddContactActivity extends AppCompatActivity implements OnClickList
         contact = new ContactBean();
         dbHelper = MyDatabaseHelper.getDBHelper(this.getApplicationContext());
 
-        goBack = (ImageButton)findViewById(R.id.btn_go_back);
+        goBack = (ImageButton) findViewById(R.id.btn_go_back);
         contactComplete = (ImageButton) findViewById(R.id.btn_complete);
         contactPhoto = (ImageButton) findViewById(R.id.contact_photo);
         goBack.setOnClickListener(this);
@@ -111,25 +111,22 @@ public class AddContactActivity extends AppCompatActivity implements OnClickList
         String imagePath = null;
         Uri uri = data.getData();
         // From Android 4.4, we can only get image number.
-        if(DocumentsContract.isDocumentUri(this,uri)){
+        if (DocumentsContract.isDocumentUri(this, uri)) {
             String docId = DocumentsContract.getDocumentId(uri);
-            if("com.android.providers.media.documents".equals(uri.getAuthority()))
-            {
+            if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
                 //解析出数字格式的ID
                 String id = docId.split(":")[1];
                 //获取相册路径
-                String selection = MediaStore.Images.Media._ID +"=" + id;
-                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,selection);
-            }else if("com.android.providers.downloads.documents".equals(uri.getAuthority()))
-            {
+                String selection = MediaStore.Images.Media._ID + "=" + id;
+                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
+            } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
                 //Long.valueOf(docId):将 string 参数解析为有符号十进制 long
                 //withAppendedId（Uri contentUri, long id)这个方法负责把id和contentUri连接成一个新的Uri
                 Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://download/public_downloads"), Long.valueOf(docId));
-                imagePath = getImagePath(contentUri,null);
+                imagePath = getImagePath(contentUri, null);
             }
-        }else if("content".equalsIgnoreCase(uri.getScheme()))
-        {
-            imagePath = getImagePath(uri,null);
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            imagePath = getImagePath(uri, null);
         }
         displayImage(imagePath);
     }
@@ -188,7 +185,7 @@ public class AddContactActivity extends AppCompatActivity implements OnClickList
         HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
         format.setCaseType(HanyuPinyinCaseType.UPPERCASE);
         format.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
-        for (int i = 0; i < name.length(); i ++) {
+        for (int i = 0; i < name.length(); i++) {
             char c = name.charAt(i);
             String[] vals = null;
             try {

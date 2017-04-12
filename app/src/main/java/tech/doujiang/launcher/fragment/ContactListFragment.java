@@ -1,8 +1,10 @@
 package tech.doujiang.launcher.fragment;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +15,12 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import tech.doujiang.launcher.R;
+import tech.doujiang.launcher.activity.AddContactActivity;
+import tech.doujiang.launcher.activity.ContactAppActivity;
 import tech.doujiang.launcher.adapter.ContactListAdapter;
 import tech.doujiang.launcher.database.MyDatabaseHelper;
 import tech.doujiang.launcher.model.ContactBean;
+import tech.doujiang.launcher.model.MyApplication;
 
 /**
  * Created by grinch on 08/04/2017.
@@ -48,7 +53,7 @@ public class ContactListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_contact_list, container, false);
         contactListView = (RecyclerView) view.findViewById(R.id.contact_list_view);
@@ -58,6 +63,14 @@ public class ContactListFragment extends Fragment {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACT);
         }
         init();
+        FloatingActionButton addContact = (FloatingActionButton)view.findViewById(R.id.add_contact);
+        addContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), AddContactActivity.class);
+                getContext().startActivity(intent);
+            }
+        });
         return view;
     }
 

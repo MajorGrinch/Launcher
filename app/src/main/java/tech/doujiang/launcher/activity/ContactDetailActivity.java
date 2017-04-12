@@ -77,7 +77,7 @@ public class ContactDetailActivity extends AppCompatActivity {
                 map.put("name", contact.getDisplayName());
                 map.put("number", contact.getPhoneNum());
                 BaseIntentUtil.intentSysDefault(ContactDetailActivity.this,
-                        ContactSMSActivity.class, map);
+                        ContactSMSActivityBeta.class, map);
             }
         });
     }
