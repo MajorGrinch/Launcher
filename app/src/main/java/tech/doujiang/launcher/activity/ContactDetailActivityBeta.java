@@ -19,7 +19,6 @@ import tech.doujiang.launcher.model.ContactBean;
 
 public class ContactDetailActivityBeta extends AppCompatActivity {
 
-    private int position;
     private ContactBean contact;
 
     private MyDatabaseHelper dbHelper;
@@ -33,14 +32,16 @@ public class ContactDetailActivityBeta extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_detail_beta);
         dbHelper = MyDatabaseHelper.getDBHelper(this);
-        RecyclerView contactDetailCallLog = (RecyclerView)findViewById(R.id.contact_detail_callLog);
-        callLogListAdapter = new CallLogListAdapter(dbHelper.getCallLog());
+        RecyclerView contactDetailCallLog = (RecyclerView) findViewById(R.id.contact_detail_callLog);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         contactDetailCallLog.setLayoutManager(layoutManager);
-        contactDetailCallLog.setAdapter(callLogListAdapter);
         Intent intent = getIntent();
-        position = intent.getIntExtra("position", 0);
-        contact = ContactListFragment.contactList.get(position);
+        int pos = intent.getIntExtra("position", -1);
+        if (pos != -1) {
+            contact = ContactListFragment.contactList.get(pos);
+        }
+        callLogListAdapter = new CallLogListAdapter(dbHelper.getCallLog(contact.getContactId()));
+        contactDetailCallLog.setAdapter(callLogListAdapter);
         initView();
         initEvent();
     }
@@ -59,7 +60,7 @@ public class ContactDetailActivityBeta extends AppCompatActivity {
 
     private void initView() {
         contactPhoto = (AppCompatImageView) findViewById(R.id.contact_detail_photo);
-        contactName = (AppCompatTextView)findViewById(R.id.contact_detail_name);
+        contactName = (AppCompatTextView) findViewById(R.id.contact_detail_name);
         contactNum = (AppCompatTextView) findViewById((R.id.contact_detail_number));
     }
 }

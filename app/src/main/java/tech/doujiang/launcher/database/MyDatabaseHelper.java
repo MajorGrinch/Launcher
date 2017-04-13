@@ -196,7 +196,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         ArrayList<CallLogBean> callLogs = new ArrayList<CallLogBean>();
         Cursor cursor = this.getWritableDatabase()
                 .rawQuery(
-                        "SELECT * FROM CallLog LEFT OUTER JOIN Contact ON CallLog.id=Contact.id ORDER BY date DESC", null);
+                        "SELECT * FROM CallLog, Contact ON CallLog.id=Contact.id ORDER BY date DESC", null);
         while (cursor.moveToNext()) {
             CallLogBean callLog = new CallLogBean();
             callLog.setId(cursor.getInt(cursor.getColumnIndex("id")));
@@ -210,6 +210,28 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         this.close();
         return callLogs;
+    }
+
+    public ArrayList<CallLogBean> getCallLog(int userid){
+        ArrayList<CallLogBean> callLogs = new ArrayList<CallLogBean>();
+        Cursor cursor = this.getWritableDatabase()
+                .rawQuery(
+                        "SELECT * FROM CallLog, Contact ON CallLog.id=Contact.id WHERE Contact.id=? ORDER BY date DESC",
+                        new String[]{String.valueOf(userid)});
+        while (cursor.moveToNext()) {
+            CallLogBean callLog = new CallLogBean();
+            callLog.setId(cursor.getInt(cursor.getColumnIndex("id")));
+            callLog.setName(cursor.getString(cursor.getColumnIndex("name")));
+            callLog.setNumber(cursor.getString(cursor.getColumnIndex("number")));
+            callLog.setDate(cursor.getLong(cursor.getColumnIndex("date")));
+            callLog.setDuration(cursor.getInt(cursor.getColumnIndex("duration")));
+            callLog.setType(cursor.getInt(cursor.getColumnIndex("type")));
+            callLogs.add(callLog);
+        }
+        cursor.close();
+        this.close();
+        return callLogs;
+
     }
 
     public ArrayList<SMSBean> getSMS() {
