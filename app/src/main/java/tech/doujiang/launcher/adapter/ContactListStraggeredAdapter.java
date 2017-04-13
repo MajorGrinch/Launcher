@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -35,18 +34,18 @@ public class ContactListStraggeredAdapter extends
     ArrayList<Integer> mycolor = new ArrayList();
 
 
-     static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView photo;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+//        AppCompatImageView photo;
         TextView name;
 
-         public ViewHolder(View view){
-             super(view);
-             photo = (ImageView)view.findViewById(R.id.contact_image);
-             name = (TextView)view.findViewById(R.id.contact_username);
-         }
+        public ViewHolder(View view) {
+            super(view);
+//            photo = (AppCompatImageView) view.findViewById(R.id.contact_image);
+            name = (TextView) view.findViewById(R.id.contact_username);
+        }
     }
 
-    public ContactListStraggeredAdapter( List<ContactBean> list) {
+    public ContactListStraggeredAdapter(List<ContactBean> list) {
         contactList = list;
     }
 
@@ -62,7 +61,7 @@ public class ContactListStraggeredAdapter extends
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.contact_straggered_item, parent, false);
+                .inflate(R.layout.contact_straggered_item, parent, false);
         ViewHolder holder = new ViewHolder(view);
         mycolor.add(context.getResources().getColor(R.color.seagreen));
         mycolor.add(context.getResources().getColor(R.color.orange));
@@ -76,7 +75,6 @@ public class ContactListStraggeredAdapter extends
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ContactBean contact = contactList.get(position);
-        holder.photo.setImageResource(R.drawable.contact_img);
         holder.name.setText(contact.getDisplayName());
         Log.d(TAG, Integer.toString(position));
         int index = position % mycolor.size();

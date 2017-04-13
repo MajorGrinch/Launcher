@@ -2,23 +2,24 @@ package tech.doujiang.launcher.activity;
 
 import android.content.ContentUris;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageSwitcher;
-import android.database.Cursor;
 import android.widget.Toast;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
@@ -27,18 +28,17 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
 import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import tech.doujiang.launcher.R;
 import tech.doujiang.launcher.database.MyDatabaseHelper;
-import tech.doujiang.launcher.database.WorkspaceDBHelper;
 import tech.doujiang.launcher.model.ContactBean;
 
-public class AddContactActivity extends AppCompatActivity implements OnClickListener {
+public class AddContactActivityBeta extends AppCompatActivity {
+
     private MyDatabaseHelper dbHelper;
-    private ImageButton goBack, contactComplete, contactPhoto;
+    private ImageButton contactPhoto;
     private EditText contactName, contactNum, contactEmail;
     private ContactBean contact;
     public Uri imageUri;
@@ -46,41 +46,55 @@ public class AddContactActivity extends AppCompatActivity implements OnClickList
     public static final int CROP_PHOTO = 2;
     public static final int CHOOSE_PHOTO = 3;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_contact);
+        setContentView(R.layout.activity_add_contact_beta);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.add_contact_toolbar);
+        toolbar.setTitle("Create new contact");
+        setSupportActionBar(toolbar);
 
+        ActionBar actionBar = getSupportActionBar();
+        if( actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_black);
+        }
         contact = new ContactBean();
         dbHelper = MyDatabaseHelper.getDBHelper(this.getApplicationContext());
 
-        goBack = (ImageButton) findViewById(R.id.btn_go_back);
-        contactComplete = (ImageButton) findViewById(R.id.btn_complete);
-        contactPhoto = (ImageButton) findViewById(R.id.contact_photo);
-        goBack.setOnClickListener(this);
-        contactComplete.setOnClickListener(this);
-        contactPhoto.setOnClickListener(this);
+        contactPhoto = (ImageButton) findViewById(R.id.contact_photo_beta);
+        contactPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                choosePhoto();
+                Log.d("AddContactActivityBeta", "Click the contact photo");
+            }
+        });
 
-        contactName = (EditText) findViewById(R.id.contact_name);
-        contactNum = (EditText) findViewById(R.id.contact_number);
-        contactEmail = (EditText) findViewById(R.id.contact_email);
+        contactName = (EditText) findViewById(R.id.contact_name_beta);
+        contactNum = (EditText) findViewById(R.id.contact_number_beta);
+        contactEmail = (EditText) findViewById(R.id.contact_email_beta);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_contact_toolbar, menu);
+        return true;
     }
 
     @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_go_back:
-                AddContactActivity.this.finish();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                AddContactActivityBeta.this.finish();
                 break;
-            case R.id.btn_complete:
+            case R.id.save_contact:
                 addContact();
-                break;
-            case R.id.contact_photo:
-                choosePhoto();
                 break;
             default:
                 break;
         }
+        return true;
     }
 
     private void choosePhoto() {
@@ -154,28 +168,28 @@ public class AddContactActivity extends AppCompatActivity implements OnClickList
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
             contactPhoto.setImageBitmap(bitmap);
         } else {
-            Toast.makeText(AddContactActivity.this, "Failed to get image!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddContactActivityBeta.this, "Failed to get image!", Toast.LENGTH_SHORT).show();
         }
         contact.setPhotoPath(imagePath);
     }
 
     private void addContact() {
         if (contactName.getText().toString().isEmpty()) {
-            Toast.makeText(AddContactActivity.this, R.string.warn_empty_name, Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddContactActivityBeta.this, R.string.warn_empty_name, Toast.LENGTH_SHORT).show();
             return;
         }
         if (contactNum.getText().toString().isEmpty()) {
-            Toast.makeText(AddContactActivity.this, R.string.warn_empty_number, Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddContactActivityBeta.this, R.string.warn_empty_number, Toast.LENGTH_SHORT).show();
             return;
         }
         if (contactEmail.getText().toString().isEmpty()) {
-            Toast.makeText(AddContactActivity.this, R.string.warn_empty_email, Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddContactActivityBeta.this, R.string.warn_empty_email, Toast.LENGTH_SHORT).show();
             return;
         }
         Pattern pattern = Pattern.compile("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
         Matcher match = pattern.matcher(contactEmail.getText().toString());
         if (!match.matches()) {
-            Toast.makeText(AddContactActivity.this, R.string.warn_invalid_email, Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddContactActivityBeta.this, R.string.warn_invalid_email, Toast.LENGTH_SHORT).show();
             return;
         }
         contact.setDisplayName(contactName.getText().toString());
@@ -219,11 +233,10 @@ public class AddContactActivity extends AppCompatActivity implements OnClickList
             }
         }
         phones.close();
-        AddContactActivity.this.finish();
+        AddContactActivityBeta.this.finish();
     }
 
     public boolean verify() {
         return true;
     }
-
 }

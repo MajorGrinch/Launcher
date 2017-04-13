@@ -15,12 +15,10 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import tech.doujiang.launcher.R;
-import tech.doujiang.launcher.activity.AddContactActivity;
-import tech.doujiang.launcher.activity.ContactAppActivity;
+import tech.doujiang.launcher.activity.AddContactActivityBeta;
 import tech.doujiang.launcher.adapter.ContactListAdapter;
 import tech.doujiang.launcher.database.MyDatabaseHelper;
 import tech.doujiang.launcher.model.ContactBean;
-import tech.doujiang.launcher.model.MyApplication;
 
 /**
  * Created by grinch on 08/04/2017.
@@ -67,7 +65,7 @@ public class ContactListFragment extends Fragment {
         addContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AddContactActivity.class);
+                Intent intent = new Intent(getContext(), AddContactActivityBeta.class);
                 getContext().startActivity(intent);
             }
         });

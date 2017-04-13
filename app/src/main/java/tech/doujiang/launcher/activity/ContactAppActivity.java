@@ -1,8 +1,6 @@
 package tech.doujiang.launcher.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -10,14 +8,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 import tech.doujiang.launcher.R;
 import tech.doujiang.launcher.database.MyDatabaseHelper;
 import tech.doujiang.launcher.fragment.CallLogListFragment;
 import tech.doujiang.launcher.fragment.ContactListFragment;
 import tech.doujiang.launcher.fragment.ContactStraggeredFragment;
-import tech.doujiang.launcher.model.MyApplication;
 
 public class ContactAppActivity extends FragmentActivity {
 

@@ -58,7 +58,6 @@
             android:exported="false" />
 
         <activity android:name=".activity.LauncherActivityB" />
-        <activity android:name=".activity.SMSListActivity" />
 
         <receiver
             android:name=".Receiver.BootReceiver"
@@ -103,8 +102,6 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".activity.AddContactActivity" />
-        <activity android:name=".activity.ContactDetailActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -130,20 +127,7 @@
             android:exported="true" />
 
         <!-- Activity that allows the user to send new SMS/MMS messages -->
-        <activity android:name=".activity.ExampleActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <action android:name="android.intent.action.SENDTO" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="sms" />
-                <data android:scheme="smsto" />
-                <data android:scheme="mms" />
-                <data android:scheme="mmsto" />
-            </intent-filter>
-        </activity>
 
         <!-- Service that delivers messages from the phone "quick response" -->
         <service
@@ -177,12 +161,13 @@
             android:exported="true" />
 
         <activity android:name=".activity.ContactAppActivity" />
-        <activity android:name=".activity.ContactSMSActivity" />
         <activity android:name=".activity.LauncherActivity" />
         <activity
             android:name=".activity.SMSListActivityBeta"
             android:label="Messages" />
-        <activity android:name=".activity.ContactSMSActivityBeta"></activity>
+        <activity android:name=".activity.ContactSMSActivityBeta" />
+        <activity android:name=".activity.AddContactActivityBeta" />
+        <activity android:name=".activity.ContactDetailActivityBeta"></activity>
     </application>
 
 </manifest>
