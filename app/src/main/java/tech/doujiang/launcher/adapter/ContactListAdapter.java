@@ -53,7 +53,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
                 int pos = holder.getAdapterPosition();
                 ContactBean contact = mcontactList.get(pos);
                 Intent intent = new Intent(v.getContext(), ContactDetailActivityBeta.class);
-                intent.putExtra("position", pos);
+                intent.putExtra("contactId", contact.getContactId());
                 v.getContext().startActivity(intent);
             }
         });

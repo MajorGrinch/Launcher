@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +25,12 @@ public class ContactStraggeredFragment extends Fragment {
     private View view;
     private ContactListStraggeredAdapter straggeredAdapter;
     private RecyclerView contactStraggeredView;
-//    private WorkspaceDBHelper dbHelper;
+    private static final String TAG = "ContactStraggeredFrag";
 
 
     private MyDatabaseHelper dbHelper;
 
-    public static List<ContactBean> contactList;
+    public List<ContactBean> contactList;
 
     public ContactStraggeredFragment() {
     }
@@ -48,30 +49,31 @@ public class ContactStraggeredFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_contact_straggered, container, false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACT);
+        }
+        Log.d(TAG, "onCreateView");
+        return view;
+    }
+
+    private void init() {
         contactStraggeredView = (RecyclerView) view.findViewById(R.id.contact_straggered_view);
         StaggeredGridLayoutManager layoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         contactStraggeredView.setLayoutManager(layoutManager);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACT);
+        dbHelper = MyDatabaseHelper.getDBHelper(getContext());
+        contactList = dbHelper.getContact();
+        Log.d(TAG, "contactlist size: "+contactList.size());
+        if (contactList.size() > 0) {
+            setAdapter(contactList);
         }
-        init();
-        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        contactList = dbHelper.getContact();
-        setAdapter(contactList);
-    }
-
-    private void init() {
-        dbHelper = MyDatabaseHelper.getDBHelper(getContext());
-        contactList = dbHelper.getContact();
-        if (contactList.size() > 0) {
-            setAdapter(contactList);
-        }
+        init();
+        Log.d(TAG, "onResume");
     }
 
     private void setAdapter(List<ContactBean> contactList) {

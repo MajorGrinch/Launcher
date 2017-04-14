@@ -35,7 +35,7 @@ public class ContactListFragment extends Fragment {
 
     private MyDatabaseHelper dbHelper;
 
-    public static List<ContactBean> contactList;
+    private List<ContactBean> contactList;
 
     public ContactListFragment() {
     }

@@ -7,12 +7,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -37,34 +36,36 @@ import tech.doujiang.launcher.R;
 import tech.doujiang.launcher.database.MyDatabaseHelper;
 import tech.doujiang.launcher.model.ContactBean;
 
-public class AddContactActivityBeta extends AppCompatActivity {
+public class UpdateContactActivity extends AppCompatActivity {
 
     private MyDatabaseHelper dbHelper;
-    private AppCompatImageButton contactPhoto;
+    private ImageButton contactPhoto;
     private AppCompatEditText contactName, contactNum, contactEmail;
     private ContactBean contact;
     public Uri imageUri;
     public static final int TAKE_PHOTO = 1;
     public static final int CROP_PHOTO = 2;
     public static final int CHOOSE_PHOTO = 3;
-
+    private int contactId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contact_beta);
         Toolbar toolbar = (Toolbar) findViewById(R.id.add_contact_toolbar);
-        toolbar.setTitle("Create new contact");
+        toolbar.setTitle("Edit contact");
         setSupportActionBar(toolbar);
-
         ActionBar actionBar = getSupportActionBar();
         if( actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_black);
         }
-        contact = new ContactBean();
-        dbHelper = MyDatabaseHelper.getDBHelper(this.getApplicationContext());
-
+        dbHelper = MyDatabaseHelper.getDBHelper(this);
+        contactId = getIntent().getIntExtra("contactId", -1);
+        if(contactId == -1){
+            return;
+        }
+        contact = dbHelper.getContact(contactId).get(0);
         contactPhoto = (AppCompatImageButton) findViewById(R.id.contact_photo_beta);
         contactPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,25 +74,26 @@ public class AddContactActivityBeta extends AppCompatActivity {
                 Log.d("AddContactActivityBeta", "Click the contact photo");
             }
         });
-
         contactName = (AppCompatEditText) findViewById(R.id.contact_name_beta);
         contactNum = (AppCompatEditText) findViewById(R.id.contact_number_beta);
         contactEmail = (AppCompatEditText) findViewById(R.id.contact_email_beta);
-    }
+        contactName.setText(contact.getDisplayName());
+        contactNum.setText(contact.getPhoneNum());
+        contactEmail.setText(contact.getEmail());
 
+    }
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.add_contact_toolbar, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
-                AddContactActivityBeta.this.finish();
+                UpdateContactActivity.this.finish();
                 break;
             case R.id.save_contact:
-                addContact();
+                updateContact(contactId);
                 break;
             default:
                 break;
@@ -104,7 +106,6 @@ public class AddContactActivityBeta extends AppCompatActivity {
         intent.setType("image/*");
         startActivityForResult(intent, CHOOSE_PHOTO);
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -122,7 +123,6 @@ public class AddContactActivityBeta extends AppCompatActivity {
                 break;
         }
     }
-
     private void handleImageOnKitkat(Intent data) {
         String imagePath = null;
         Uri uri = data.getData();
@@ -146,7 +146,6 @@ public class AddContactActivityBeta extends AppCompatActivity {
         }
         displayImage(imagePath);
     }
-
     private void handleImageBeforeKitKat(Intent data) {
         Uri uri = data.getData();
         String imagePath = getImagePath(uri, null);
@@ -170,28 +169,27 @@ public class AddContactActivityBeta extends AppCompatActivity {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
             contactPhoto.setImageBitmap(bitmap);
         } else {
-            Toast.makeText(AddContactActivityBeta.this, "Failed to get image!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdateContactActivity.this, "Failed to get image!", Toast.LENGTH_SHORT).show();
         }
         contact.setPhotoPath(imagePath);
     }
-
-    private void addContact() {
+    private void updateContact(int contactId) {
         if (contactName.getText().toString().isEmpty()) {
-            Toast.makeText(AddContactActivityBeta.this, R.string.warn_empty_name, Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdateContactActivity.this, R.string.warn_empty_name, Toast.LENGTH_SHORT).show();
             return;
         }
         if (contactNum.getText().toString().isEmpty()) {
-            Toast.makeText(AddContactActivityBeta.this, R.string.warn_empty_number, Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdateContactActivity.this, R.string.warn_empty_number, Toast.LENGTH_SHORT).show();
             return;
         }
         if (contactEmail.getText().toString().isEmpty()) {
-            Toast.makeText(AddContactActivityBeta.this, R.string.warn_empty_email, Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdateContactActivity.this, R.string.warn_empty_email, Toast.LENGTH_SHORT).show();
             return;
         }
         Pattern pattern = Pattern.compile("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
         Matcher match = pattern.matcher(contactEmail.getText().toString());
         if (!match.matches()) {
-            Toast.makeText(AddContactActivityBeta.this, R.string.warn_invalid_email, Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdateContactActivity.this, R.string.warn_invalid_email, Toast.LENGTH_SHORT).show();
             return;
         }
         contact.setDisplayName(contactName.getText().toString());
@@ -219,7 +217,7 @@ public class AddContactActivityBeta extends AppCompatActivity {
         contact.setEmail(contactEmail.getText().toString());
         String pinYin = sb.toString().toUpperCase();
         contact.setPinYin(pinYin);
-        dbHelper.addContact(contact);
+        dbHelper.updateContact(contact);
         Cursor phones = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
         if (phones == null) {
             Log.i("Phones: ", "NULL");
@@ -228,17 +226,13 @@ public class AddContactActivityBeta extends AppCompatActivity {
         while (phones.moveToNext()) {
             String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             if (phoneNumber.equals(contact.getPhoneNum())) {
-                String contactId = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
-                Uri deleteContactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(contactId));
+                String contactid = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
+                Uri deleteContactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(contactid));
                 int id = getContentResolver().delete(deleteContactUri, null, null);
                 Log.i("DeleteContact: ", Integer.toString(id));
             }
         }
         phones.close();
-        AddContactActivityBeta.this.finish();
-    }
-
-    public boolean verify() {
-        return true;
+        UpdateContactActivity.this.finish();
     }
 }

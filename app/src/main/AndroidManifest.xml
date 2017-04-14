@@ -167,7 +167,8 @@
             android:label="Messages" />
         <activity android:name=".activity.ContactSMSActivityBeta" />
         <activity android:name=".activity.AddContactActivityBeta" />
-        <activity android:name=".activity.ContactDetailActivityBeta"></activity>
+        <activity android:name=".activity.ContactDetailActivityBeta" />
+        <activity android:name=".activity.UpdateContactActivity"></activity>
     </application>
 
 </manifest>

@@ -181,6 +181,26 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return contacts;
     }
 
+    public ArrayList<ContactBean> getContact(int contactId) {
+        ArrayList<ContactBean> contacts = new ArrayList<ContactBean>();
+        Cursor cursor = this.getWritableDatabase()
+                .rawQuery("select * from Contact WHERE id=?  order by pinYin asc", new String[]{String.valueOf(contactId)});
+        while (cursor.moveToNext()) {
+            ContactBean contact = new ContactBean();
+            contact.setContactId(cursor.getInt(cursor.getColumnIndex("id")));
+            contact.setDisplayName(cursor.getString(cursor.getColumnIndex("name")));
+            contact.setPhoneNum(cursor.getString(cursor.getColumnIndex("number")));
+            contact.setPhotoPath(cursor.getString(cursor.getColumnIndex("photoPath")));
+            contact.setEmail(cursor.getString(cursor.getColumnIndex("email")));
+            contact.setPinYin(cursor.getString(cursor.getColumnIndex("pinYin")));
+            contacts.add(contact);
+        }
+        cursor.close();
+        this.close();
+        return contacts;
+    }
+
+
     public ArrayList<String> getNumber() {
         ArrayList<String> numbers = new ArrayList<String>();
         Cursor cursor = this.getWritableDatabase().rawQuery("select distinct number from Contact", null);

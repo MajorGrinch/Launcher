@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
@@ -29,10 +30,13 @@ public class ContactAppActivity extends FragmentActivity {
     private LinearLayout phone_contact_all;
 
     private SearchView searchView;
+    private static final String TAG = "ContactAppActivity";
 
-
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,7 @@ public class ContactAppActivity extends FragmentActivity {
         phone_contact_recent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "click the contact straggered");
                 initFragment(1);
             }
         });
@@ -67,6 +72,7 @@ public class ContactAppActivity extends FragmentActivity {
             }
         });
         initFragment(1);
+        Log.d(TAG, "onCreate");
     }
 
     private void initFragment(int index) {
