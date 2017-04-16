@@ -30,7 +30,7 @@ public class CallLogListFragment extends Fragment {
 
     }
 
-    public static CallLogListFragment newInstance(String param1, String param2) {
+    public static CallLogListFragment newInstance() {
         CallLogListFragment fragment = new CallLogListFragment();
         return fragment;
     }

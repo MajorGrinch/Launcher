@@ -35,7 +35,7 @@ public class ContactStraggeredFragment extends Fragment {
     public ContactStraggeredFragment() {
     }
 
-    public static ContactStraggeredFragment newInstance(String param1, String param2) {
+    public static ContactStraggeredFragment newInstance() {
         ContactStraggeredFragment fragment = new ContactStraggeredFragment();
         return fragment;
     }

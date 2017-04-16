@@ -311,10 +311,10 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void deleteContact(int contactId) {
         SQLiteDatabase db = this.getWritableDatabase();
         try {
-            db.execSQL("DELETE FROM Contact where id = ?", new String[]{Integer.toString(contactId)});
+            db.execSQL("DELETE FROM Contact where id = ?", new String[]{String.valueOf(contactId)});
         } finally {
+            db.close();
         }
-        db.close();
     }
 
 

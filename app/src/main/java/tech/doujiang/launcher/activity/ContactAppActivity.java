@@ -4,13 +4,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
 import tech.doujiang.launcher.R;
+import tech.doujiang.launcher.adapter.ContactListStraggeredAdapter;
 import tech.doujiang.launcher.database.MyDatabaseHelper;
 import tech.doujiang.launcher.fragment.CallLogListFragment;
 import tech.doujiang.launcher.fragment.ContactListFragment;
@@ -43,12 +46,14 @@ public class ContactAppActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_app);
         dbHelper = MyDatabaseHelper.getDBHelper(this);
-        searchView = (SearchView)findViewById(R.id.search_contact);
+        searchView = (SearchView) findViewById(R.id.search_contact);
         searchView.setFocusable(false);
         searchView.requestFocusFromTouch();
         this.phone_call_log = (LinearLayout) findViewById(R.id.phone_call_log);
         this.phone_contact_recent = (LinearLayout) findViewById(R.id.phone_contact_recent);
-        this.phone_contact_all = (LinearLayout)findViewById(R.id.phone_contact_all);
+        this.phone_contact_all = (LinearLayout) findViewById(R.id.phone_contact_all);
+        ViewPager pager = (ViewPager) findViewById(R.id.phone_content);
+        pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
 
         phone_contact_all.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +76,7 @@ public class ContactAppActivity extends FragmentActivity {
                 initFragment(2);
             }
         });
-        initFragment(1);
+//        initFragment(1);
         Log.d(TAG, "onCreate");
     }
 
@@ -90,18 +95,21 @@ public class ContactAppActivity extends FragmentActivity {
                 }
                 break;
             case 1:
+                Log.d(TAG, "click 1");
                 if (contactStraggeredFragment == null) {
+                    Log.d(TAG, "null");
                     contactStraggeredFragment = new ContactStraggeredFragment();
                     transaction.add(R.id.phone_content, contactStraggeredFragment);
                 } else {
+                    Log.d(TAG, "not null");
                     transaction.show(contactStraggeredFragment);
                 }
                 break;
             case 2:
-                if(callLogFragment == null){
+                if (callLogFragment == null) {
                     callLogFragment = new CallLogListFragment();
                     transaction.add(R.id.phone_content, callLogFragment);
-                }else{
+                } else {
                     transaction.show(callLogFragment);
                 }
                 break;
@@ -118,8 +126,40 @@ public class ContactAppActivity extends FragmentActivity {
         if (contactStraggeredFragment != null) {
             transaction.hide(contactStraggeredFragment);
         }
-        if(contactListFragment != null){
+        if (contactListFragment != null) {
             transaction.hide(contactListFragment);
+        }
+    }
+
+    private class MyPagerAdapter extends FragmentPagerAdapter {
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int pos) {
+            switch (pos) {
+
+                case 0:
+                    return ContactStraggeredFragment.newInstance();
+                case 1:
+                    return CallLogListFragment.newInstance();
+                case 2:
+                    return ContactListFragment.newInstance();
+                default:
+                    return ContactStraggeredFragment.newInstance();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "Page";
         }
     }
 

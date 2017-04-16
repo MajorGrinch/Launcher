@@ -40,7 +40,7 @@ public class ContactListFragment extends Fragment {
     public ContactListFragment() {
     }
 
-    public static ContactListFragment newInstance(String param1, String param2) {
+    public static ContactListFragment newInstance() {
         ContactListFragment fragment = new ContactListFragment();
         return fragment;
     }
@@ -54,14 +54,10 @@ public class ContactListFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_contact_list, container, false);
-        contactListView = (RecyclerView) view.findViewById(R.id.contact_list_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        contactListView.setLayoutManager(layoutManager);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACT);
         }
-        init();
-        FloatingActionButton addContact = (FloatingActionButton)view.findViewById(R.id.add_contact);
+        FloatingActionButton addContact = (FloatingActionButton) view.findViewById(R.id.add_contact);
         addContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,11 +71,13 @@ public class ContactListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        contactList = dbHelper.getContact();
-        setAdapter(contactList);
+        init();
     }
 
     private void init() {
+        contactListView = (RecyclerView) view.findViewById(R.id.contact_list_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        contactListView.setLayoutManager(layoutManager);
         dbHelper = MyDatabaseHelper.getDBHelper(getActivity());
         contactList = dbHelper.getContact();
         if (contactList.size() > 0) {
