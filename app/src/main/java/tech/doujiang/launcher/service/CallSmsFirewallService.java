@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import tech.doujiang.launcher.R;
 import tech.doujiang.launcher.activity.LauncherActivityB;
 import tech.doujiang.launcher.activity.LoginActivity;
+import tech.doujiang.launcher.database.MyDatabaseHelper;
 import tech.doujiang.launcher.database.WorkspaceDBHelper;
 import tech.doujiang.launcher.model.CallLogBean;
 import tech.doujiang.launcher.model.ContactBean;
@@ -51,7 +52,7 @@ public class CallSmsFirewallService extends Service {
 
     private ArrayList<ContactBean> contactList;
     private ArrayList<String> numbers;
-    private WorkspaceDBHelper dbHelper;
+    private MyDatabaseHelper dbHelper;
 
     private PhoneListener listener;
     private TelephonyManager tm;
@@ -62,7 +63,7 @@ public class CallSmsFirewallService extends Service {
         super.onCreate();
 
         Log.e("CallSmsFirewallService", "onCreate");
-        dbHelper = WorkspaceDBHelper.getDBHelper(getApplicationContext());
+        dbHelper = MyDatabaseHelper.getDBHelper(getApplicationContext());
         contactList = dbHelper.getContact();
         tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         listener = new PhoneListener();

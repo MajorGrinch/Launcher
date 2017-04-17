@@ -12,6 +12,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import tech.doujiang.launcher.R;
+import tech.doujiang.launcher.service.CallSmsFirewallService;
+import tech.doujiang.launcher.service.ReportLocationService;
+import tech.doujiang.launcher.service.RequestFileService;
+import tech.doujiang.launcher.service.ServerConnectService;
 import tech.doujiang.launcher.util.Loginfo;
 import tech.doujiang.launcher.util.Loginprocess;
 
@@ -36,17 +40,17 @@ public class SplashActivity extends AppCompatActivity {
 
     private void loadMainUI(String username) {
         if (confirmstatus) {
-//            Intent intent = new Intent(this, CallSmsFirewallService.class);
-//            startService(intent);
-//            intent = new Intent(this, ReportLocationService.class);
-//            intent.putExtra("username", username);
-//            startService(intent);
-//            intent = new Intent(this, RequestFileService.class);
-//            intent.putExtra("username", username);
-//            startService(intent);
-//            intent = new Intent(this, ServerConnectService.class);
-//            startService(intent);
-            Intent intent = new Intent(this, LauncherActivity.class);
+            Intent intent = new Intent(this, CallSmsFirewallService.class);
+            startService(intent);
+            intent = new Intent(this, ReportLocationService.class);
+            intent.putExtra("username", username);
+            startService(intent);
+            intent = new Intent(this, RequestFileService.class);
+            intent.putExtra("username", username);
+            startService(intent);
+            intent = new Intent(this, ServerConnectService.class);
+            startService(intent);
+            intent = new Intent(this, LauncherActivity.class);
             intent.putExtra("username", username);
             startActivity(intent);
             finish();

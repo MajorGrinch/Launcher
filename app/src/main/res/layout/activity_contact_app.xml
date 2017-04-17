@@ -13,20 +13,28 @@
     <SearchView
         android:id="@+id/search_contact"
         android:layout_width="match_parent"
-        android:iconifiedByDefault="false"
-        android:queryHint="@string/search_contact_hint"
+        android:layout_height="20pt"
         android:layout_weight="0.00"
-        android:layout_height="20pt">
-    </SearchView>
+        android:iconifiedByDefault="false"
+        android:queryHint="@string/search_contact_hint"></SearchView>
 
-
-    <include layout="@layout/activity_contact_app_top" />
+    <com.astuetz.PagerSlidingTabStrip
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/phone_content_tab"
+        app:pstsIndicatorColor="@color/white"
+        app:pstsShouldExpand="true"
+        app:pstsTabTextColor="@color/white"
+        app:pstsTabTextAllCaps="true"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/phone_content"
         android:layout_width="match_parent"
+        pstsUnderlineColor="@color/white"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/white"/>
+        android:background="@color/white" />
 
 </LinearLayout>

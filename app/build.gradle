@@ -18,14 +18,10 @@ android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
 
-    aaptOptions {
-        additionalParameters "--no-version-vectors"
-    }
-
     defaultConfig {
         applicationId "tech.doujiang.launcher"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
@@ -53,4 +49,5 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.android.support:palette-v7:25.3.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.jpardogo.materialtabstrip:library:1.1.1'
 }
