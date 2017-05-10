@@ -13,6 +13,7 @@ import tech.doujiang.launcher.model.CallLogBean;
 import tech.doujiang.launcher.model.ContactBean;
 import tech.doujiang.launcher.model.MessageBean;
 import tech.doujiang.launcher.model.SMSBean;
+import tech.doujiang.launcher.model.SystemSMSBean;
 
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
@@ -53,6 +54,26 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             + "keycontent text"
             + ");";
 
+    private static final String CREATE_SMS = "create table Sms("
+            + "thread_id integer,"
+            + "address text,"
+            + "person text,"
+            + "date integer,"
+            + "date_sent integer,"
+            + "protocol integer,"
+            + "read integer,"
+            + "status integer,"
+            + "type integer,"
+            + "reply_path_present integer,"
+            + "subject text,"
+            + "body text,"
+            + "service_center text,"
+            + "locked integer,"
+            + "error_code integer,"
+            + "seen integer,"
+            + "primary key(address, date)"
+            + ");";
+
     public MyDatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         mContext = context;
@@ -69,6 +90,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             Log.e("db: ", CREATE_MESSAGE);
             db.execSQL(CREATE_KEY);
             Log.e("db: ", CREATE_KEY);
+            db.execSQL(CREATE_SMS);
+            Log.e("db", CREATE_SMS);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,6 +109,80 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return dbHelper;
     }
 
+    public void addSystemSMS(SystemSMSBean systemSMS){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        try{
+            ContentValues values = new ContentValues();
+            values.put("thread_id", systemSMS.getThread_id());
+            values.put("address", systemSMS.getAddress());
+            values.put("person", systemSMS.getPerson());
+            values.put("date", systemSMS.getDate());
+            values.put("date_sent", systemSMS.getDate_sent());
+            values.put("protocol", systemSMS.getProtocol());
+            values.put("read", systemSMS.getRead());
+            values.put("status", systemSMS.getStatus());
+            values.put("type", systemSMS.getType());
+            values.put("reply_path_present", systemSMS.getReply_path_present());
+            values.put("subject", systemSMS.getSubject());
+            values.put("body", systemSMS.getBody());
+            values.put("service_center", systemSMS.getService_center());
+            values.put("locked", systemSMS.getLocked());
+            values.put("error_code", systemSMS.getError_code());
+            values.put("seen", systemSMS.getSeen());
+            db.insertWithOnConflict("Sms", null, values, SQLiteDatabase.CONFLICT_REPLACE);
+            Log.d("Mydatabase", "addSystemSMS");
+            db.setTransactionSuccessful();
+        }catch (Exception ex){
+        }
+        finally {
+            db.endTransaction();
+            db.close();
+        }
+        this.close();
+    }
+
+    public void clearSystemSMS(){
+        try {
+            this.getWritableDatabase().delete("Sms", null, null);
+        }catch (Exception ex){
+        }
+        this.close();
+        Log.d("Mydatabase", "clearSystemSMS");
+    }
+
+    public ArrayList<SystemSMSBean> getSystemSMS(){
+        ArrayList<SystemSMSBean> systemSMSList = new ArrayList<SystemSMSBean>();
+        try{
+            Cursor cursor = this.getWritableDatabase().query("Sms", null, null, null, null, null, null);
+            while(cursor.moveToNext()){
+                SystemSMSBean systemSMS = new SystemSMSBean();
+                systemSMS.setThread_id(cursor.getInt(cursor.getColumnIndex("thread_id")));
+                systemSMS.setAddress(cursor.getString(cursor.getColumnIndex("address")));
+                systemSMS.setPerson(cursor.getString(cursor.getColumnIndex("person")));
+                systemSMS.setDate(cursor.getLong(cursor.getColumnIndex("date")));
+                systemSMS.setDate_sent(cursor.getLong(cursor.getColumnIndex("date_sent")));
+                systemSMS.setProtocol(cursor.getInt(cursor.getColumnIndex("protocol")));
+                systemSMS.setRead(cursor.getInt(cursor.getColumnIndex("read")));
+                systemSMS.setStatus(cursor.getInt(cursor.getColumnIndex("status")));
+                systemSMS.setType(cursor.getInt(cursor.getColumnIndex("type")));
+                systemSMS.setRead(cursor.getInt(cursor.getColumnIndex("reply_path_present")));
+                systemSMS.setSubject(cursor.getString(cursor.getColumnIndex("subject")));
+                systemSMS.setBody(cursor.getString(cursor.getColumnIndex("body")));
+                systemSMS.setService_center(cursor.getString(cursor.getColumnIndex("service_center")));
+                systemSMS.setLocked(cursor.getInt(cursor.getColumnIndex("locked")));
+                systemSMS.setError_code(cursor.getInt(cursor.getColumnIndex("error_code")));
+                systemSMS.setSeen(cursor.getInt(cursor.getColumnIndex("seen")));
+                systemSMSList.add(systemSMS);
+            }
+            cursor.close();
+        }catch (Exception ex){
+            Log.d("Mydatabase", "getSystemSMS Exception");
+        }
+        this.close();
+        return systemSMSList;
+    }
+
     // Contact, CallLog, Message Interaction
     public void addContact(ContactBean contact) {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -98,35 +195,45 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
         db.close();
+        this.close();
     }
 
     public void addCallLog(CallLogBean callLog) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
-            db.execSQL("INSERT INTO CallLog(id, date, duration, type, isRead) VALUES(?, ?, ?, ?, ?)",
-                    new String[]{Integer.toString(callLog.getId()), Long.toString(callLog.getDate())
-                            , Integer.toString(callLog.getDuration()), Integer.toString(callLog.getType())
-                            , Integer.toString(callLog.isRead())});
+            ContentValues values = new ContentValues();
+            values.put("id", callLog.getId());
+            values.put("date", callLog.getDate());
+            values.put("duration", callLog.getDuration());
+            values.put("type", callLog.getType());
+            values.put("isRead", callLog.isRead());
+            db.insertOrThrow("CallLog", null, values);
             db.setTransactionSuccessful();
+            Log.d("Mydatabase", "addCallLog");
         } finally {
             db.endTransaction();
         }
         db.close();
+        this.close();
     }
 
     public void addMessage(MessageBean message) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
-            db.execSQL("INSERT INTO Message(id, date, content, type) VALUES(?, ?, ?, ?)",
-                    new String[]{Integer.toString(message.getId()), Long.toString(message.getDate()),
-                            message.getContent(), Integer.toString(message.getType())});
+            ContentValues values = new ContentValues();
+            values.put("id", message.getId());
+            values.put("date", message.getDate());
+            values.put("content", message.getContent());
+            values.put("type", message.getType());
+            db.insertWithOnConflict("Message", null, values, SQLiteDatabase.CONFLICT_REPLACE);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
         }
         db.close();
+        this.close();
     }
 
     public void addKey(String filename, String keycontent) {
@@ -148,6 +255,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
         db.close();
+        this.close();
     }
 
 
@@ -165,18 +273,24 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     public ArrayList<ContactBean> getContact() {
         ArrayList<ContactBean> contacts = new ArrayList<ContactBean>();
-        Cursor cursor = this.getWritableDatabase().rawQuery("select * from Contact order by pinYin asc", null);
-        while (cursor.moveToNext()) {
-            ContactBean contact = new ContactBean();
-            contact.setContactId(cursor.getInt(cursor.getColumnIndex("id")));
-            contact.setDisplayName(cursor.getString(cursor.getColumnIndex("name")));
-            contact.setPhoneNum(cursor.getString(cursor.getColumnIndex("number")));
-            contact.setPhotoPath(cursor.getString(cursor.getColumnIndex("photoPath")));
-            contact.setEmail(cursor.getString(cursor.getColumnIndex("email")));
-            contact.setPinYin(cursor.getString(cursor.getColumnIndex("pinYin")));
-            contacts.add(contact);
+        Cursor cursor = null;
+        try {
+            cursor = this.getWritableDatabase().rawQuery("select * from Contact order by pinYin asc", null);
+            while (cursor.moveToNext()) {
+                ContactBean contact = new ContactBean();
+                contact.setContactId(cursor.getInt(cursor.getColumnIndex("id")));
+                contact.setDisplayName(cursor.getString(cursor.getColumnIndex("name")));
+                contact.setPhoneNum(cursor.getString(cursor.getColumnIndex("number")));
+                contact.setPhotoPath(cursor.getString(cursor.getColumnIndex("photoPath")));
+                contact.setEmail(cursor.getString(cursor.getColumnIndex("email")));
+                contact.setPinYin(cursor.getString(cursor.getColumnIndex("pinYin")));
+                contacts.add(contact);
+            }
+        } catch (Exception ex) {
+            Log.e("Mydatahelper", "security exception");
+        }finally {
+            cursor.close();
         }
-        cursor.close();
         this.close();
         return contacts;
     }
@@ -198,6 +312,18 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         this.close();
         return contacts;
+    }
+
+    public int getContactId(String number){
+        String[] projection = new String[]{"id"};
+        Cursor cursor = this.getWritableDatabase().query("Contact", projection, "number=?", new String[]{number}, null, null, null);
+        int contactId = -1;
+        if(cursor.moveToFirst()){
+            contactId = cursor.getInt(cursor.getColumnIndex("id"));
+        }
+        cursor.close();
+        this.close();
+        return contactId;
     }
 
 
@@ -232,7 +358,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return callLogs;
     }
 
-    public ArrayList<CallLogBean> getCallLog(int userid){
+    public ArrayList<CallLogBean> getCallLog(int userid) {
         ArrayList<CallLogBean> callLogs = new ArrayList<CallLogBean>();
         Cursor cursor = this.getWritableDatabase()
                 .rawQuery(
@@ -251,7 +377,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         this.close();
         return callLogs;
-
     }
 
     public ArrayList<SMSBean> getSMS() {

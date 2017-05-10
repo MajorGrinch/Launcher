@@ -12,6 +12,7 @@ import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 
 import tech.doujiang.launcher.util.IsonlineClient;
+import tech.doujiang.launcher.util.SelfDestruction;
 
 public class ReportLocationService extends Service {
     private static String TAG = "ReportLocationService";

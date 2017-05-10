@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import tech.doujiang.launcher.model.SMSBean;
 
 public class SMSListAdapter extends RecyclerView.Adapter<SMSListAdapter.ViewHolder> {
 
-    private List<SMSBean> mysmslist;
+    private ArrayList<SMSBean> mysmslist;
 
     static class ViewHolder extends RecyclerView.ViewHolder{
         ImageView smsImage;
@@ -43,7 +44,7 @@ public class SMSListAdapter extends RecyclerView.Adapter<SMSListAdapter.ViewHold
         }
     }
 
-    public SMSListAdapter(List<SMSBean> smslist){
+    public SMSListAdapter(ArrayList<SMSBean> smslist){
         mysmslist = smslist;
     }
 
@@ -79,6 +80,12 @@ public class SMSListAdapter extends RecyclerView.Adapter<SMSListAdapter.ViewHold
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE HH:mm");
         String time = simpleDateFormat.format(timeDate);
         holder.smsTime.setText(time);
+    }
+
+    public void swap(ArrayList<SMSBean> smslist){
+        mysmslist.clear();
+        mysmslist.addAll(smslist);
+        notifyDataSetChanged();
     }
 
     @Override

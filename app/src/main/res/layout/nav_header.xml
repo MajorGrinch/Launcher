@@ -16,16 +16,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="email address"
         android:textColor="#FFF"
         android:textSize="14sp"
-        android:id="@+id/sms"/>
+        android:id="@+id/userid"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/sms"
-        android:text="name"
+        android:layout_above="@id/userid"
         android:textColor="#FFF"
         android:textSize="14sp"
         android:id="@+id/username"/>

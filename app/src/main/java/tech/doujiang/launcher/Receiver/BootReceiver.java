@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import tech.doujiang.launcher.service.CallSmsFirewallService;
 import tech.doujiang.launcher.service.ServerConnectService;
 
 public class BootReceiver extends BroadcastReceiver {
@@ -17,11 +16,9 @@ public class BootReceiver extends BroadcastReceiver {
         /*
         *   开机启动防火墙服务
         * */
-        Intent service = new Intent(context, CallSmsFirewallService.class);
-        context.startService(service);
-        Log.e("Receiver", "StartCallSmsFirewallService");
-        service = new Intent(context, ServerConnectService.class);
-        context.startService(service);
-        Log.e("Receiver", "ServerConnectService");
+//        Log.e("Receiver", "StartCallSmsFirewallService");
+//        service = new Intent(context, ServerConnectService.class);
+//        context.startService(service);
+//        Log.e("Receiver", "ServerConnectService");
     }
 }

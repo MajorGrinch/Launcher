@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import tech.doujiang.launcher.database.MyDatabaseHelper;
 
 public class Loginprocess {
 
@@ -41,7 +42,7 @@ public class Loginprocess {
         return false;
     }
 
-    public boolean confirm() {
+    public JSONObject confirm() {
         try {
             String username = myinfo.getUsername();
             String psw = myinfo.getPsw();
@@ -60,12 +61,14 @@ public class Loginprocess {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
                 JSONObject result = new JSONObject(response.body().string());
+                Log.d(TAG, result.toString());
                 if (result.getString("userid") != null)
-                    return true;
+                    return result;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return false;
+        return null;
     }
+
 }

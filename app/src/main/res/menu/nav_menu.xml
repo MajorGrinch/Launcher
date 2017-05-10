@@ -13,6 +13,9 @@
         <item android:id="@+id/update_rsa"
             android:icon="@drawable/ic_backup"
             android:title="Update RSA"/>
+        <item android:id="@+id/nav_exit"
+            android:icon="@drawable/ic_exit"
+            android:title="Exit"/>
     </group>
 
 </menu>

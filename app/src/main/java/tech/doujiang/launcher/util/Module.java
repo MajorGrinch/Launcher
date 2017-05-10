@@ -1,16 +1,13 @@
 package tech.doujiang.launcher.util;
 
-import java.io.*;
-
-import android.annotation.SuppressLint;
-import android.app.AndroidAppHelper;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
-
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -20,13 +17,8 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import tech.doujiang.launcher.database.MyDatabaseHelper;
 import tech.doujiang.launcher.model.MyApplication;
 import tech.doujiang.launcher.model.OpenfileListener;
-import tech.doujiang.launcher.model.OpenfileListener;
-
-import static de.robv.android.xposed.XposedHelpers.findAndHookConstructor;
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 
 /**
  * Created by jcase on 9/9/15.
@@ -49,12 +41,12 @@ public class Module implements IXposedHookLoadPackage {
 
     Context context = MyApplication.getContext();
 
-    @SuppressLint("NewApi")
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
 
         packageName = lpparam.packageName;
-//        XposedBridge.log("Loaded app:" + packageName);
+        Log.d("Xposedd", packageName);
+        XposedBridge.log("Loaded app:" + packageName);
         if (!targetPackage.isEmpty() && !targetPackage.equals(packageName)) {
             XposedBridge.log("!targetPackage.isEmpty() && !targetPackage.equals(packageName)");
             return;
@@ -67,6 +59,7 @@ public class Module implements IXposedHookLoadPackage {
                     content = "";
                     int i;
                     XposedBridge.log("HOOK SUCCESSFULLY!");
+                    Log.d("Xposed", "beforeHookedMethod: ");
 
                     while ((i = reader.read()) != -1) {
                         char c = (char) i;
@@ -118,18 +111,18 @@ public class Module implements IXposedHookLoadPackage {
                         Log.d("cache dir", cacDir);
                         cache = new File(cacDir, filename);
                         Log.d("Exist cache?", String.valueOf(cache.exists()));
-                        if(cache.exists()){     //has cache
+                        if (cache.exists()) {     //has cache
                             param.args[0] = new FileReader(cache);
                             temp = File.createTempFile(cache_name, null);
                             SimpleEncrypt.decrypt(cache, temp);
                             param.args[0] = new FileReader(temp);
-                        }else { //no cache
+                        } else { //no cache
                             temp = File.createTempFile(cache_name, null);
                             Log.d("temp path", temp.getAbsolutePath());
                             Log.d("file path", filepath);
                             Myaes.decryptFile(index_surfix + 5, filepath, temp.getAbsolutePath());
                             param.args[0] = new FileReader(temp);
-                            if(cache.createNewFile()){
+                            if (cache.createNewFile()) {
                                 SimpleEncrypt.encrypt(temp, cache);
                             }
                         }

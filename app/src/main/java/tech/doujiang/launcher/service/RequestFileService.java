@@ -8,9 +8,11 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.StrictMode;
+import android.util.Base64;
 import android.util.Log;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.security.PrivateKey;
 
 
 import okhttp3.FormBody;
@@ -21,9 +23,10 @@ import okhttp3.Response;
 
 import tech.doujiang.launcher.database.MyDatabaseHelper;
 
+import tech.doujiang.launcher.util.RSAUtil;
+import tech.doujiang.launcher.util.SelfDestruction;
 import tech.doujiang.launcher.util.TempHelper;
 
-@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 @SuppressLint("NewApi")
 public class RequestFileService extends Service {
     private static String TAG = "RequestFileService";
@@ -38,28 +41,11 @@ public class RequestFileService extends Service {
         return null;
     }
 
-    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @SuppressLint("NewApi")
     @Override
     public void onCreate() {
-        boolean DEVELOPER_MODE = true;
-        if (DEVELOPER_MODE) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                    .detectDiskReads()
-                    .detectDiskWrites()
-                    .detectNetwork()   // or .detectAll() for all detectable problems
-                    .penaltyLog()
-                    .build());
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                    .detectLeakedSqlLiteObjects()
-                    .detectLeakedClosableObjects()
-                    .penaltyLog()
-                    .penaltyDeath()
-                    .build());
-        }
         super.onCreate();
         Log.e(TAG, "Service is created");
-
     }
 
     @Override
@@ -75,6 +61,7 @@ public class RequestFileService extends Service {
                 return Service.START_STICKY_COMPATIBILITY;
             }
             username = intent.getStringExtra("username");
+            Log.d(TAG, username);
         }
         new Thread(new Runnable() {
             @Override
@@ -115,12 +102,13 @@ public class RequestFileService extends Service {
             has_file = false;
             return;
         }
-
+        Log.d(TAG, content);
         int pathend = content.indexOf(".txt") + 4;
         int pathstart = content.indexOf('/');
         String substr = content.substring(0, pathend);
         int filest = substr.lastIndexOf('/');
         String filename = substr.substring(filest+1, pathend);
+        Log.d(TAG, filename);
 
         OkHttpClient subclient = new OkHttpClient();
         RequestBody subBody = new FormBody.Builder()
@@ -135,9 +123,12 @@ public class RequestFileService extends Service {
 
         MyDatabaseHelper dbHelper = MyDatabaseHelper.getDBHelper(this);
         String kkk = subresp.body().string();
-        dbHelper.addKey(filename, kkk);
-        Log.d("AESKeyByte", kkk);
+//        dbHelper.addKey(filename, kkk);
 
+        String prikeystr = dbHelper.getKey("PrivateKey");
+        PrivateKey privateKey = RSAUtil.restorePrivateKey(Base64.decode(prikeystr, Base64.NO_WRAP));
+        String aeskey = RSAUtil.RSADecode(privateKey, Base64.decode(kkk, Base64.NO_WRAP));
+        dbHelper.addKey(filename, aeskey);
 
         String rela_path = content.substring(pathstart, pathend);
         String exter_path = Environment.getExternalStorageDirectory().getPath();

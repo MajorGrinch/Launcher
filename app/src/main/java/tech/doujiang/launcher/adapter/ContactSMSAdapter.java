@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import tech.doujiang.launcher.model.MessageBean;
 
 public class ContactSMSAdapter extends RecyclerView.Adapter<ContactSMSAdapter.ViewHolder> {
 
-    private List<MessageBean> myMessageList;
+    private ArrayList<MessageBean> myMessageList;
 
     static class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -42,7 +43,7 @@ public class ContactSMSAdapter extends RecyclerView.Adapter<ContactSMSAdapter.Vi
         }
     }
 
-    public ContactSMSAdapter(List<MessageBean> messageList){
+    public ContactSMSAdapter(ArrayList<MessageBean> messageList){
         myMessageList = messageList;
     }
 
@@ -76,4 +77,11 @@ public class ContactSMSAdapter extends RecyclerView.Adapter<ContactSMSAdapter.Vi
     public int getItemCount() {
         return myMessageList.size();
     }
+
+    public void swap(ArrayList<MessageBean> MessageList){
+        myMessageList.clear();
+        myMessageList.addAll(MessageList);
+        notifyDataSetChanged();
+    }
+
 }
