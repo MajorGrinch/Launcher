@@ -195,7 +195,14 @@ public class AddContactActivityBeta extends AppCompatActivity {
             return;
         }
         contact.setDisplayName(contactName.getText().toString());
-        contact.setPhoneNum(contactNum.getText().toString());
+        //tianjia 2017/11/22
+        String number = contactNum.getText().toString();
+        number = number.replace(" ", "");
+        if (number.contains("+86")) {
+            number = number.substring(3);
+        }
+        contact.setPhoneNum(number);
+//        contact.setPhoneNum(contactNum.getText().toString());
         String name = contactName.getText().toString();
         StringBuilder sb = new StringBuilder();
         HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();

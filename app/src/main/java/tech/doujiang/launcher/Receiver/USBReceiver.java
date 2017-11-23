@@ -18,20 +18,21 @@ public class USBReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        boolean isConnected = intent.getBooleanExtra("connected", false);
-        if (isConnected) {
-            Log.d(TAG, "USB Connected");
-            String workdirPath = Environment.getExternalStorageDirectory().getPath() + "/workdata";
-            Log.d(TAG, workdirPath);
-            workdirserv = new Intent(context, WorkDirService.class);
-            workdirserv.putExtra("dirpath", workdirPath);
-            context.startService(workdirserv);
-
-        } else {
-            Log.d(TAG, "USB Disconnected");
-            Intent stopworkServ = new Intent(context, WorkDirService.class);
-            context.stopService(stopworkServ);
-
-        }
+//        boolean isConnected = intent.getBooleanExtra("connected", false);
+//        if (isConnected) {
+//            Log.d(TAG, "USB Connected");
+//            String workdirPath = Environment.getExternalStorageDirectory().getPath() + "/workdata";
+//            Log.d(TAG, workdirPath);
+//            workdirserv = new Intent(context, WorkDirService.class);
+//            workdirserv.putExtra("dirpath", workdirPath);
+//            context.startService(workdirserv);
+//
+//        } else {
+//            Log.d(TAG, "USB Disconnected");
+//            Intent stopworkServ = new Intent(context, WorkDirService.class);
+//            context.stopService(stopworkServ);
+//
+//        }
+        Log.d(TAG, "onReceive: nothing todo");
     }
 }

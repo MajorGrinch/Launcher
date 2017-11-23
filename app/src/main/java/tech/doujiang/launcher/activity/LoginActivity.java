@@ -2,6 +2,8 @@ package tech.doujiang.launcher.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -160,8 +162,11 @@ public class LoginActivity extends AppCompatActivity {
         String username = etAccount.getText().toString();
         String psw = etPW.getText().toString();
         Log.v("Userinfo", username + " : " + psw);
-
-        loginfo = new Loginfo(username, psw);
+        WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wInfo = wifiManager.getConnectionInfo();
+        String macAddress = wInfo.getMacAddress();
+        Log.d("MacAddress", macAddress);
+        loginfo = new Loginfo(username, psw, macAddress);
         progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setTitle("Login");
         progressDialog.setMessage("Authenticating...");
@@ -181,7 +186,7 @@ public class LoginActivity extends AppCompatActivity {
                     } catch (JSONException ex) {
                         Log.d(TAG, "return information error");
                     }
-                    updateRSA(name);
+
 
                     Intent intent = new Intent(LoginActivity.this, CallRecordService.class);
                     startService(intent);
@@ -189,6 +194,8 @@ public class LoginActivity extends AppCompatActivity {
                     intent = new Intent(LoginActivity.this, ReportLocationService.class);
                     intent.putExtra("username", name);
                     startService(intent);
+
+                    updateRSA(name);
 
                     intent = new Intent(LoginActivity.this, SMSBlockService.class);
                     intent.putExtra("username", name);

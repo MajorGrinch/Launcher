@@ -10,6 +10,7 @@ import tech.doujiang.launcher.util.WorkDirListener;
 public class WorkDirService extends Service {
     private WorkDirListener workDirListener;
     private static final String TAG = "WorkDirService";
+
     public WorkDirService() {
     }
 
@@ -35,7 +36,7 @@ public class WorkDirService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(workDirListener != null){
+        if (workDirListener != null) {
             workDirListener.stopWatching();
         }
     }

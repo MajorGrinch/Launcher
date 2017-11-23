@@ -51,6 +51,8 @@ public class CallRecordReceiver extends PhoneCallReceiver {
         Log.d(TAG, number);
         Log.d(TAG, "onIncomingCallReceived");
         dbHelper = MyDatabaseHelper.getDBHelper(context);
+        int contactId = dbHelper.getContactId(number);
+        Log.d(TAG, "onIncomingCallReceived: contactId:" + contactId);
         if( dbHelper.getContactId(number) != -1){
             isColleague = true;
         }

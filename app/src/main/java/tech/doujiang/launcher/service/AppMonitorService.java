@@ -1,18 +1,24 @@
 package tech.doujiang.launcher.service;
 
 import android.app.ActivityManager;
+import android.app.AndroidAppHelper;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 
 
 import com.jaredrummler.android.processes.AndroidProcesses;
+import com.stericson.RootTools.RootTools;
 
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import tech.doujiang.launcher.model.MyApplication;
+import tech.doujiang.launcher.util.OpenfileUtil;
 
 import static com.stericson.RootTools.RootTools.killProcess;
 
@@ -64,6 +70,16 @@ public class AppMonitorService extends Service {
 
         @Override
         public void run() {
+            boolean isactive = OpenfileUtil.isServiceWork(MyApplication.getContext(),
+                    "tech.doujiang.launcher.service.WorkDirService");
+            Log.d(TAG, "workdirservice is " + isactive);
+            if( !isactive){
+                String workdirPath = Environment.getExternalStorageDirectory().getPath() + "/workdata";
+                Log.d(TAG, workdirPath);
+                Intent workdirserv = new Intent(mContext, WorkDirService.class);
+                workdirserv.putExtra("dirpath", workdirPath);
+                mContext.startService(workdirserv);
+            }
             List<ActivityManager.RunningAppProcessInfo> processes =
                     AndroidProcesses.getRunningAppProcessInfo(mContext);
             for(ActivityManager.RunningAppProcessInfo process:processes){

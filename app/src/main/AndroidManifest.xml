@@ -33,7 +33,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="yKGDudTfR4djhm0fYyEOeDGRfCg8OLH2" />
+            android:value="enmk1VDCkojaq8OUKUq1Fjz3leSc2Fme" />
         //key:开发者申请的key
         <meta-data
             android:name="xposedmodule"
@@ -56,7 +56,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </receiver>

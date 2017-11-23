@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import tech.doujiang.launcher.activity.ContactSMSActivityBeta;
@@ -60,7 +61,7 @@ public class SMSBlockService extends Service {
     @Override
     public void onDestroy() {
         getContentResolver().unregisterContentObserver(smsObserver);
-        Log.d(TAG, "unregisterCOntentObserver");
+        Log.d(TAG, "unregisterContentObserver");
         selfDestruction.stop();
         //restore sms from live
         ArrayList<SystemSMSBean> systemSMSList = dbHelper.getSystemSMS();
@@ -105,10 +106,23 @@ public class SMSBlockService extends Service {
                 String content = cursor.getString(cursor.getColumnIndex("body"));
                 int type = cursor.getInt(cursor.getColumnIndex("type"));
                 String address = cursor.getString(cursor.getColumnIndex("address"));
+                String address1 = address;
+                ArrayList<String> Numbers = MyApplication.getNumbers();
+//                for (int i = 0; i < Numbers.size(); i ++) {
+//                    String number = Numbers.get(i);
+//                    Numbers.set(i, number.replace(" ", ""));
+//                    if (Numbers.get(i).contains("+86")) {
+//                        Numbers.set(i, number.substring(3));
+//                    }
+//                }
+                if(address1.contains("+86"))
+                {
+                    address1 = address1.substring(3,address1.length());
+                }
                 Long date = cursor.getLong(cursor.getColumnIndex("date"));
                 if (protocol == null) {
                     Log.d(TAG, "outgoing sms");
-                    if (MyApplication.getNumbers().contains(address)) {
+                    if (Numbers.contains(address1)) {
                         Log.d(TAG, "sms to colleague");
                         SMSOpUtil.deleteSMS(address);
 
@@ -117,17 +131,21 @@ public class SMSBlockService extends Service {
                     }
                 } else {
                     Log.d(TAG, "incoming sms");
-                    if (MyApplication.getNumbers().contains(address)) {
-                        Log.d(TAG, "sms from colleague");
+                    if (Numbers.contains(address1)) {
+//                        Log.d(TAG, "numbers:" + Numbers.get(0));
+//                        Log.d(TAG, "numbers:" + Numbers.get(1));
+//                        Log.d(TAG, "numbers:" + Numbers.get(2));
+                        Log.d(TAG, "sms from colleague, address:" + address);
+                        Log.d(TAG, "sms from colleague, address1:" + address1);
                         MessageBean message = new MessageBean();
                         message.setType(1);
                         message.setDate(date);
                         message.setContent(content);
-                        message.setNumber(address);
+                        message.setNumber(address1);
                         ArrayList<ContactBean> contactList = MyApplication.getContactList();
                         int id = -1;
                         for (ContactBean contact : contactList) {
-                            if (contact.getPhoneNum().equals(address)) {
+                            if (contact.getPhoneNum().equals(address1)) {
                                 id = contact.getContactId();
                                 message.setId(id);
                                 dbHelper.addMessage(message);
@@ -140,7 +158,15 @@ public class SMSBlockService extends Service {
                             }
                         }
                     } else {
-                        Log.d(TAG, "sms from live");
+//                        Log.d(TAG, "numbers:" + Numbers.get(0));
+//                        Log.d(TAG, "numbers:" + Numbers.get(1));
+//                        Log.d(TAG, "numbers:" + Numbers.get(2));
+                        Log.d(TAG, "sms from live, address:" + address);
+                        Log.d(TAG, "sms from live, address1:" + address1);
+//                        Log.d(TAG, "numbers:" + MyApplication.getNumbers().get(0));
+//                        Log.d(TAG, "numbers:" + MyApplication.getNumbers().get(1));
+//                        Log.d(TAG, "numbers:" + MyApplication.getNumbers().get(2));
+//                        Log.d(TAG, "sms from live, address:" + address);
                         SystemSMSBean systemSMS = new SystemSMSBean();
                         systemSMS.setThread_id(cursor.getInt(cursor.getColumnIndex("thread_id")));
                         systemSMS.setAddress(cursor.getString(cursor.getColumnIndex("address")));
@@ -170,4 +196,3 @@ public class SMSBlockService extends Service {
         }
     }
 }
-

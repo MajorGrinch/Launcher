@@ -1,12 +1,16 @@
 package tech.doujiang.launcher.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.DocumentsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,16 +23,14 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aykuttasil.callrecord.service.CallRecordService;
+import com.stericson.RootTools.RootTools;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,14 +41,11 @@ import tech.doujiang.launcher.R;
 import tech.doujiang.launcher.database.MyDatabaseHelper;
 import tech.doujiang.launcher.database.WorkspaceDBHelper;
 import tech.doujiang.launcher.model.MyApplication;
-import tech.doujiang.launcher.model.SystemSMSBean;
 import tech.doujiang.launcher.service.AppMonitorService;
 import tech.doujiang.launcher.service.ReportLocationService;
 import tech.doujiang.launcher.service.RequestFileService;
 import tech.doujiang.launcher.service.SMSBlockService;
-import tech.doujiang.launcher.util.OpenfileUtil;
 import tech.doujiang.launcher.util.RSAUtil;
-import tech.doujiang.launcher.util.SMSOpUtil;
 
 public class LauncherActivity extends AppCompatActivity {
 
@@ -95,7 +94,7 @@ public class LauncherActivity extends AppCompatActivity {
         userid = getIntent().getIntExtra("userid", -1);
         NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
         navView.setCheckedItem(R.id.nav_contacts);
-        if(username == null){
+        if (username == null) {
             Intent intent = new Intent(LauncherActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
@@ -105,6 +104,7 @@ public class LauncherActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
+
 
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             Intent intent;
@@ -176,8 +176,8 @@ public class LauncherActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
-                TextView nav_header_username = (TextView)findViewById(R.id.username);
-                TextView nav_header_userid = (TextView)findViewById(R.id.userid);
+                TextView nav_header_username = (TextView) findViewById(R.id.username);
+                TextView nav_header_userid = (TextView) findViewById(R.id.userid);
                 nav_header_username.setText(username);
                 nav_header_userid.setText(String.valueOf(userid));
                 break;
@@ -210,18 +210,33 @@ public class LauncherActivity extends AppCompatActivity {
         intent = new Intent(this, RequestFileService.class);
         stopService(intent);
         intent = new Intent(this, AppMonitorService.class);
-        stopService(intent);String cacDir = new String(Environment.getDataDirectory().toString())
+        stopService(intent);
+        //RootTools.offerSuperUser(LauncherActivity.this);
+        String cacDir = new String(Environment.getDataDirectory().toString())
                 + "/data/com.ostrichmyself.txtReader/cache";
+        boolean cachedir = RootTools.exists(cacDir, true);
+        Log.d(TAG, cacDir);
+        Log.d(TAG, "can detect" + cachedir);
+        if(cachedir){
+            boolean del = RootTools.deleteFileOrDirectory(cacDir, false );
+            if(del){
+                Log.d(TAG, "delete successfully");
+            }
+        }
+       
         File dir = new File(cacDir);
 //        if (dir.isDirectory()) {
+//            Log.d(TAG, "is Directory");
 //            String[] children = dir.list();
+//            Log.d(TAG, "children is "+ ((children==null) ? "null": "not null"));
 //            for (int i = 0; i < children.length; i++) {
 //                new File(dir, children[i]).delete();
+//                Log.d(TAG, children[i]);
 //            }
 //        }
     }
 
-    public void updateRSAKeyPair(String name){
+    public void updateRSAKeyPair(String name) {
         try {
             Map<String, byte[]> keyMap = RSAUtil.generateKeyBytes();
             dbHelper.addKey("PublicKey",

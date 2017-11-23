@@ -4,10 +4,12 @@ public class Loginfo {
 
     private String username;
     private String psw;
+    private String macaddress;
 
-    public Loginfo(String username, String psw){
+    public Loginfo(String username, String psw, String mac){
         this.username = username;
         this.psw = psw;
+        this.macaddress = mac;
     }
 
     public String getUsername(){
@@ -15,5 +17,8 @@ public class Loginfo {
     }
     public String getPsw(){
         return this.psw;
+    }
+    public String getMacaddress(){
+        return this.macaddress;
     }
 }

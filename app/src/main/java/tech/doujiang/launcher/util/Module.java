@@ -89,7 +89,7 @@ public class Module implements IXposedHookLoadPackage {
                                 Log.d("Response: ", (response == null) ? "Null" : response);
                                 String kkk = response;
                                 try {
-                                    Myaes.init(kkk);
+                                    Myaes.init(kkk);//kkk就是文件密钥
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -112,7 +112,6 @@ public class Module implements IXposedHookLoadPackage {
                         cache = new File(cacDir, filename);
                         Log.d("Exist cache?", String.valueOf(cache.exists()));
                         if (cache.exists()) {     //has cache
-                            param.args[0] = new FileReader(cache);
                             temp = File.createTempFile(cache_name, null);
                             SimpleEncrypt.decrypt(cache, temp);
                             param.args[0] = new FileReader(temp);

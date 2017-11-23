@@ -36,12 +36,12 @@ public class SelfDestruction extends WebSocketListener {
         client = new OkHttpClient.Builder()
                 .readTimeout(0, TimeUnit.MILLISECONDS)
                 .build();
-
+        Log.d(TAG, username);
         Request request = new Request.Builder()
-                .url("ws://192.168.1.101:8080/MobileSafeServer/SelfDestruction/" + username)
+                .url(TempHelper.server_url + "/SelfDestruction/" + username)
                 .build();
         selfDestructionSocket = client.newWebSocket(request, this);
-
+        Log.d(TAG, "build websocket connection");
         // Trigger shutdown of the dispatcher's executor so this process can exit cleanly.
         client.dispatcher().executorService().shutdown();
     }

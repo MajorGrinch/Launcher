@@ -46,6 +46,7 @@ public class Loginprocess {
         try {
             String username = myinfo.getUsername();
             String psw = myinfo.getPsw();
+            String macAddress = myinfo.getMacaddress();
             String connectionurl = serverurl + "/Userconfirm";
             OkHttpClient client = new OkHttpClient.Builder()
                                     .connectTimeout(5, java.util.concurrent.TimeUnit.SECONDS)
@@ -53,6 +54,7 @@ public class Loginprocess {
             RequestBody formBody = new FormBody.Builder()
                     .add("username", username)
                     .add("psw", psw)
+                    .add("macaddress", macAddress)
                     .build();
             Request request = new Request.Builder()
                     .url(connectionurl)

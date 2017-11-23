@@ -22,6 +22,7 @@ public class SimpleEncrypt {
             fos.write(buffer);
             byte[] simple = "simple".getBytes("utf-8");
             fos.write(simple);
+
         } catch (Exception ex) {
             Log.e("Simple Decrypt", Log.getStackTraceString(ex));
         }
